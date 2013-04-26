@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="java/src/main/java"/>
+	<classpathentry kind="src" path="core/src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="M2_REPO/com/googlecode/playn/playn-core/1.5.1/playn-core-1.5.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/googlecode/mavennatives/maven-nativedependencies-plugin/0.0.6/maven-nativedependencies-plugin-0.0.6.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/googlecode/playn/playn-java/1.5.1/playn-java-1.5.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
