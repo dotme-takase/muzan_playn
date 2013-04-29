@@ -82,7 +82,7 @@ public class LinkedSprite implements Sprite {
 		layer.setTranslation(dest.x + this.parent.getFrameWidth() / 2, dest.y
 				+ this.parent.getFrameHeight() / 2);
 		surf.clear();
-		if (this.texture != null) {
+		if ((this.texture != null) && (this.frame > 0)) {
 			Rectangle source = new Rectangle(
 					(int) ((this.frame * this.frameWidth) % texture.width()),
 					(int) (Math.floor((this.frame * this.frameWidth)

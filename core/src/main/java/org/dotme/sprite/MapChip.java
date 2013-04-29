@@ -42,6 +42,10 @@ public class MapChip {
 		return type;
 	}
 
+	public boolean isWalkable() {
+		return (type == MAPCHIP_TYPE_FLOOR || type == MAPCHIP_TYPE_DOWNSTAIR);
+	}
+
 	public void setType(int type) {
 		this.type = type;
 	}

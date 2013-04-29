@@ -146,13 +146,13 @@ public class ARPGUtils {
 		}
 	}
 
-	private static Vector2 getMapPoint(BaseCharacter obj) {
+	public static Vector2 getMapPoint(BaseCharacter obj) {
 		return new Vector2((int) Math.floor(obj.x
 				/ SpriteConstants.TILE_SIZE_DEFAULT), (int) Math.floor(obj.y
 				/ SpriteConstants.TILE_SIZE_DEFAULT));
 	}
 
-	private static Vector2 getMapPointFromVector(Vector2 obj) {
+	public static Vector2 getMapPointFromVector(Vector2 obj) {
 		return new Vector2((int) Math.floor(obj.x
 				/ SpriteConstants.TILE_SIZE_DEFAULT), (int) Math.floor(obj.y
 				/ SpriteConstants.TILE_SIZE_DEFAULT));
