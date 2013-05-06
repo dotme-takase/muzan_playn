@@ -84,6 +84,10 @@ public class Muzan implements Game {
 		if (pointerListener.mouseDownTime >= 0) {
 			pointerListener.mouseDownTime++;
 		}
+
+		if (pointerListener.mouseUpTime >= 0) {
+			pointerListener.mouseUpTime++;
+		}
 		player.inputAction(input);
 		player.updateFrame();
 	}
@@ -96,30 +100,43 @@ public class Muzan implements Game {
 	private class PointerListener implements playn.core.Pointer.Listener {
 
 		public int mouseDownTime;
+		public int mouseUpTime;
+		private boolean drugMode = false;
 
 		public PointerListener() {
 			mouseDownTime = -1;
+			mouseUpTime = -1;
 		}
 
 		@Override
 		public void onPointerStart(Event event) {
 			input.isMouseDown = true;
 			onPointerDrag(event);
-			if (Math.pow(input.axisX, 2) + Math.pow(input.axisY, 2) < Math.pow(
-					SpriteConstants.CHARACTER_RADIUS_DEFAULT, 2)) {
-				input.isCursor = true;
+			if (drugMode) {
+				if (Math.pow(input.axisX, 2) + Math.pow(input.axisY, 2) < Math
+						.pow(SpriteConstants.CHARACTER_RADIUS_DEFAULT, 2)) {
+					input.isCursor = true;
+				}
+			} else {
+				if (mouseUpTime < 0 || mouseUpTime >= 8) {
+					input.isCursor = true;
+				}
 			}
 			mouseDownTime = 0;
+			mouseUpTime = -1;
+			input.isMouseClick = false;
 		}
 
 		@Override
 		public void onPointerEnd(Event event) {
 			input.isCursor = input.isMouseDown = false;
-			if (mouseDownTime < 100) {
+			if (mouseDownTime < 8) {
 				input.isMouseClick = true;
 			} else {
 				input.axisX = input.axisY = 0;
 			}
+			mouseDownTime = -1;
+			mouseUpTime = 0;
 		}
 
 		@Override
