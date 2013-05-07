@@ -132,11 +132,12 @@ public class Muzan implements Game {
 			input.isCursor = input.isMouseDown = false;
 			if (mouseDownTime < 8) {
 				input.isMouseClick = true;
+				mouseUpTime = 0;
 			} else {
+				mouseUpTime = -1;
 				input.axisX = input.axisY = 0;
 			}
 			mouseDownTime = -1;
-			mouseUpTime = 0;
 		}
 
 		@Override
