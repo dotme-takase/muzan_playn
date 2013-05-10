@@ -50,10 +50,7 @@ public class Muzan implements Game {
 
 		CharacterSpriteContainer playerCon = new CharacterSpriteContainer(
 				"player", "img/player.png");
-		playerCon.getLeftArmSprite().setTexture(
-				assets().getImage("img/shields.png"));
-		playerCon.getRightArmSprite().setTexture(
-				assets().getImage("img/swords.png"));
+
 
 		player = new PlayerCharacter(playerCon, null, null);
 		input = new InputStatus();

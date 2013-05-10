@@ -3,6 +3,7 @@ package org.dotme.sprite.arpg;
 import static playn.core.PlayN.assets;
 import static playn.core.PlayN.graphics;
 
+import org.dotme.arpg.MasterData;
 import org.dotme.sprite.Animation;
 import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.SpriteContainer;
@@ -39,13 +40,13 @@ public class CharacterSpriteContainer extends SpriteContainer {
 		bodyAnim1.addAnimation(new Animation(ANIMATION_DAMAGE, 0, 1));
 		bodyAnim1.addAnimation(new Animation(ANIMATION_PARRIED, 0, 7));
 
-		this.leftArmSprite = new LinkedSprite(null,
+		this.leftArmSprite = new LinkedSprite(MasterData.IMAGE_SHIELDS,
 				SpriteConstants.LEFT_ARM_WIDTH_DEFAULT,
 				SpriteConstants.LEFT_ARM_HEIGHT_DEFAULT, -1, bodyAnim1,
 				SpriteConstants.LEFT_ARM_ORIGIN_DEFAULT,
 				SpriteConstants.LEFT_ARM_MAP_DEFAULT);
 
-		this.rightArmSprite = new LinkedSprite(null,
+		this.rightArmSprite = new LinkedSprite(MasterData.IMAGE_SWORDS,
 				SpriteConstants.RIGHT_ARM_WIDTH_DEFAULT,
 				SpriteConstants.RIGHT_ARM_HEIGHT_DEFAULT, -1, bodyAnim1,
 				SpriteConstants.RIGHT_ARM_ORIGIN_DEFAULT,

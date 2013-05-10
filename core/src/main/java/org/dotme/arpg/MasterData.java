@@ -1,5 +1,7 @@
 package org.dotme.arpg;
 
+import static playn.core.PlayN.assets;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,7 +9,14 @@ import java.util.Map;
 
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 
+import playn.core.Image;
+
 public class MasterData {
+	public static final Image IMAGE_SHIELDS = assets().getImage(
+			"img/shields.png");
+	public static final Image IMAGE_SWORDS = assets()
+			.getImage("img/swords.png");
+
 	public static final Map<String, BaseItem> itemData = new HashMap<String, BaseItem>() {
 		private static final long serialVersionUID = 1L;
 		{

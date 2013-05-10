@@ -67,11 +67,11 @@ public abstract class BaseCharacter implements Cloneable {
 		this.isPlayer = false;
 		this.stateId = UUID.randomUUID().toString();
 
-		this.rightArm = null;
+		this.rightArm = rightArm;
 		if (rightArm != null) {
 			this.equipRight(rightArm);
 		}
-		this.leftArm = null;
+		this.leftArm = leftArm;
 		if (leftArm != null) {
 			this.equipLeft(leftArm);
 		}
@@ -82,6 +82,12 @@ public abstract class BaseCharacter implements Cloneable {
 		BaseCharacter clone = (BaseCharacter) super.clone();
 		clone.setSpriteCon(new CharacterSpriteContainer(spriteCon.getName(),
 				spriteCon.getImageSrc()));
+		if (rightArm != null) {
+			clone.equipRight(rightArm);
+		}
+		if (leftArm != null) {
+			clone.equipLeft(leftArm);
+		}
 		return clone;
 	}
 
