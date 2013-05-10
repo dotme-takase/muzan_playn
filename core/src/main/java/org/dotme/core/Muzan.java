@@ -10,8 +10,10 @@ import java.util.Map;
 
 import org.dotme.arpg.ARPGUtils;
 import org.dotme.arpg.BaseCharacter;
+import org.dotme.arpg.EnemyCharacter;
 import org.dotme.arpg.InputStatus;
 import org.dotme.arpg.MapGenerator;
+import org.dotme.arpg.MasterData;
 import org.dotme.arpg.PlayerCharacter;
 import org.dotme.core.math.Vector2;
 import org.dotme.sprite.MapChip;
@@ -23,7 +25,7 @@ import playn.core.Game;
 import playn.core.Pointer.Event;
 
 public class Muzan implements Game {
-	private PlayerCharacter player;
+	private BaseCharacter player;
 	private MapChipSprite mapChipSprite;
 	private MapGenerator mapGenerator;
 	private Vector2 viewPoint;
@@ -39,7 +41,7 @@ public class Muzan implements Game {
 				SpriteConstants.TILE_SIZE_DEFAULT, graphics().width(),
 				graphics().height());
 		mapGenerator = new MapGenerator();
-		MapChip[][] mapChips = mapGenerator.generate(5, 5);
+		MapChip[][] mapChips = mapGenerator.generate(2, 2);
 		viewPoint = new Vector2(0, 0);
 
 		mapChipSprite.setOffset(viewPoint);
@@ -52,17 +54,29 @@ public class Muzan implements Game {
 				assets().getImage("img/shields.png"));
 		playerCon.getRightArmSprite().setTexture(
 				assets().getImage("img/swords.png"));
-		graphics().rootLayer().add(playerCon.getLayer());
+
 		player = new PlayerCharacter(playerCon, null, null);
 		input = new InputStatus();
 		pointerListener = new PointerListener();
 		pointer().setListener(pointerListener);
 		characters = new ArrayList<BaseCharacter>();
-		characters.add(player);
-		ARPGUtils.warpToRandomPoint(player, mapChipSprite,
-				characterPreviousPoints);
-		playerCon.gotoAndPlay(CharacterSpriteContainer.ANIMATION_WALK, true);
-		playerCon.pauseAndReset();
+		try {
+			characters.add(player);
+			ARPGUtils.warpToRandomPoint(player, mapChipSprite,
+					characterPreviousPoints);
+			for (int i = 0; i < 20; i++) {
+				EnemyCharacter enemy = (EnemyCharacter) MasterData.enemyData
+						.get(0).clone();
+				characters.add(enemy);
+				ARPGUtils.warpToRandomPoint(enemy, mapChipSprite,
+						characterPreviousPoints);
+			}
+			for (BaseCharacter character : this.characters) {
+				graphics().rootLayer().add(
+						character.getSpriteContainer().getLayer());
+			}
+		} catch (CloneNotSupportedException e) {
+		}
 	}
 
 	@Override
@@ -76,7 +90,10 @@ public class Muzan implements Game {
 
 		mapChipSprite.setOffset(viewPoint);
 		mapChipSprite.paint(alpha);
-		player.paintInView(alpha, viewPoint);
+
+		for (BaseCharacter character : this.characters) {
+			character.paintInView(alpha, viewPoint);
+		}
 	}
 
 	@Override
@@ -88,8 +105,15 @@ public class Muzan implements Game {
 		if (pointerListener.mouseUpTime >= 0) {
 			pointerListener.mouseUpTime++;
 		}
-		player.inputAction(input);
-		player.updateFrame();
+		for (BaseCharacter character : this.characters) {
+			if (character instanceof EnemyCharacter) {
+				((EnemyCharacter) character).simpleAction(mapChipSprite,
+						characters);
+			} else if (character instanceof PlayerCharacter) {
+				((PlayerCharacter) character).inputAction(input);
+			}
+			character.updateFrame();
+		}
 	}
 
 	@Override

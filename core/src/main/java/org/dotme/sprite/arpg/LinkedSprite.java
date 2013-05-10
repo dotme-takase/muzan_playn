@@ -21,6 +21,15 @@ public class LinkedSprite implements Sprite {
 	private int frameWidth;
 	private int frameHeight;
 	private int frame;
+
+	public int getFrame() {
+		return frame;
+	}
+
+	public void setFrame(int frame) {
+		this.frame = frame;
+	}
+
 	private SpriteAnimation parent;
 	private SurfaceLayer layer = null;
 	private List<Vector2withDegree> pointMap = null;
@@ -82,7 +91,7 @@ public class LinkedSprite implements Sprite {
 		layer.setTranslation(dest.x + this.parent.getFrameWidth() / 2, dest.y
 				+ this.parent.getFrameHeight() / 2);
 		surf.clear();
-		if ((this.texture != null) && (this.frame > 0)) {
+		if ((this.texture != null) && (this.frame >= 0)) {
 			Rectangle source = new Rectangle(
 					(int) ((this.frame * this.frameWidth) % texture.width()),
 					(int) (Math.floor((this.frame * this.frameWidth)

@@ -1,27 +1,21 @@
 package org.dotme.arpg;
 
 public class BaseItem implements Cloneable {
+	public static final int TYPE_SWORD = 100;
+	public static final int TYPE_SHIELD = 200;
+	public static final int TYPE_POTION = 300;
+
 	private int speed = 0;
 	private int hitPoint = 0;
 	private int maxHitPoint = 0;
+	private int basePoint = 0;
 	private int bonusPoint = 0;
 	private int range = 0;
 	private int spriteFrame = -1;
-	private String type = null;
+	private int type = 0;
 
-	public BaseItem clone() {
-		return this.copyTo(new BaseItem());
-	}
-
-	protected BaseItem copyTo(BaseItem dest) {
-		dest.speed = this.speed;
-		dest.hitPoint = this.hitPoint;
-		dest.maxHitPoint = this.maxHitPoint;
-		dest.bonusPoint = this.bonusPoint;
-		dest.range = this.range;
-		dest.type = this.type;
-		dest.spriteFrame = this.spriteFrame;
-		return dest;
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public int getSpeed() {
@@ -56,11 +50,11 @@ public class BaseItem implements Cloneable {
 		this.bonusPoint = bonusPoint;
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 
@@ -70,5 +64,25 @@ public class BaseItem implements Cloneable {
 
 	public void setRange(int range) {
 		this.range = range;
+	}
+
+	public int getBasePoint() {
+		return basePoint;
+	}
+
+	public void setBasePoint(int basePoint) {
+		this.basePoint = basePoint;
+	}
+
+	public void onUse(BaseCharacter character) {
+		character.HP += Math.min(character.MHP - character.HP, this.basePoint);
+	}
+
+	public int getSpriteFrame() {
+		return spriteFrame;
+	}
+
+	public void setSpriteFrame(int spriteFrame) {
+		this.spriteFrame = spriteFrame;
 	}
 }

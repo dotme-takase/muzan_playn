@@ -8,7 +8,7 @@ import org.dotme.core.math.Vector2;
 import org.dotme.sprite.SpriteContainer;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 
-public abstract class BaseCharacter {
+public abstract class BaseCharacter implements Cloneable {
 
 	public static final int CHARACTER_ACTION_NONE = 0;
 	public static final int CHARACTER_ACTION_DEFENCE_MOTION = 1;
@@ -18,7 +18,7 @@ public abstract class BaseCharacter {
 	public static final int CHARACTER_ACTION_DAMAGE = 5;
 	public static final int CHARACTER_ACTION_DEAD = 6;
 
-	private SpriteContainer spriteCon;
+	private CharacterSpriteContainer spriteCon;
 	BaseItem rightArm;
 	BaseItem leftArm;
 	int speed;
@@ -44,7 +44,7 @@ public abstract class BaseCharacter {
 	boolean isPlayer;
 	String stateId;
 
-	public BaseCharacter(SpriteContainer spriteCon, BaseItem rightArm,
+	public BaseCharacter(CharacterSpriteContainer spriteCon, BaseItem rightArm,
 			BaseItem leftArm) {
 		this.setSpriteCon(spriteCon);
 		this.radius = (int) spriteCon.getLayer().originX();
@@ -75,29 +75,49 @@ public abstract class BaseCharacter {
 		if (leftArm != null) {
 			this.equipLeft(leftArm);
 		}
-	};
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		BaseCharacter clone = (BaseCharacter) super.clone();
+		clone.setSpriteCon(new CharacterSpriteContainer(spriteCon.getName(),
+				spriteCon.getImageSrc()));
+		return clone;
+	}
 
 	public void equipLeft(BaseItem item) {
 		this.ejectLeft();
-		// ToDo
-	};
+		try {
+			this.leftArm = (BaseItem) item.clone();
+			this.spriteCon.getLeftArmSprite().setFrame(item.getSpriteFrame());
+		} catch (CloneNotSupportedException e) {
+		}
+		// ToDo play sound
+	}
 
 	public void equipRight(BaseItem item) {
 		this.ejectRight();
-		// ToDo
-	};
+		try {
+			this.rightArm = (BaseItem) item.clone();
+			this.spriteCon.getRightArmSprite().setFrame(item.getSpriteFrame());
+		} catch (CloneNotSupportedException e) {
+		}
+		// ToDo play sound
+	}
 
 	public void ejectLeft() {
 		if (this.leftArm != null) {
-			// ToDo
+			this.leftArm = null;
+			this.spriteCon.getLeftArmSprite().setFrame(-1);
 		}
-	};
+	}
 
 	public void ejectRight() {
 		if (this.rightArm != null) {
-			// ToDo
+			this.rightArm = null;
+			this.spriteCon.getRightArmSprite().setFrame(-1);
 		}
-	};
+	}
 
 	public void addToDropList(BaseItem item, int rate) {
 		this.dropRateMap.put(item, rate);
@@ -109,7 +129,7 @@ public abstract class BaseCharacter {
 		if (Math.floor(Math.random() * 100) < 80) {
 			// ToDo
 		}
-	};
+	}
 
 	public void updateFrame() {
 		this.spriteCon.setAlpha(1.0f);
@@ -254,7 +274,7 @@ public abstract class BaseCharacter {
 				(float) (Math.PI * (this.direction) / 180.0f));
 
 		this.clientTime++;
-	};
+	}
 
 	public void checkDropItem() {
 		// ToDo
@@ -264,7 +284,7 @@ public abstract class BaseCharacter {
 		return spriteCon;
 	}
 
-	public void setSpriteCon(SpriteContainer spriteCon) {
+	public void setSpriteCon(CharacterSpriteContainer spriteCon) {
 		this.spriteCon = spriteCon;
 	}
 

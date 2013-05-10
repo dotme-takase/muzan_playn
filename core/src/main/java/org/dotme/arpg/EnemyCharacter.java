@@ -6,7 +6,7 @@ import java.util.List;
 import org.dotme.core.math.Vector2;
 import org.dotme.sprite.MapChip;
 import org.dotme.sprite.MapChipSprite;
-import org.dotme.sprite.SpriteContainer;
+import org.dotme.sprite.arpg.CharacterSpriteContainer;
 import org.dotme.sprite.arpg.SpriteConstants;
 
 public class EnemyCharacter extends BaseCharacter {
@@ -18,8 +18,8 @@ public class EnemyCharacter extends BaseCharacter {
 	private List<Vector2> path = null;
 	private Vector2 nextPath;
 
-	public EnemyCharacter(SpriteContainer spriteCon, BaseItem rightArm,
-			BaseItem leftArm) {
+	public EnemyCharacter(CharacterSpriteContainer spriteCon,
+			BaseItem rightArm, BaseItem leftArm) {
 		super(spriteCon, rightArm, leftArm);
 	}
 
@@ -248,7 +248,7 @@ public class EnemyCharacter extends BaseCharacter {
 			this.isWalking = false;
 		} else {
 			if (this.mode == RANDOM_WALK) {
-				if (this.path == null && this.path.size() > 0) {
+				if (this.path == null || this.path.size() == 0) {
 					BaseCharacter target;
 					if (this.target != null) {
 						target = this.target;

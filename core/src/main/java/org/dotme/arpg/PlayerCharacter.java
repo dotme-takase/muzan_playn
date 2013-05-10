@@ -1,9 +1,9 @@
 package org.dotme.arpg;
 
-import org.dotme.sprite.SpriteContainer;
+import org.dotme.sprite.arpg.CharacterSpriteContainer;
 
 public class PlayerCharacter extends BaseCharacter {
-	public PlayerCharacter(SpriteContainer spriteCon, BaseItem rightArm,
+	public PlayerCharacter(CharacterSpriteContainer spriteCon, BaseItem rightArm,
 			BaseItem leftArm) {
 		super(spriteCon, rightArm, leftArm);
 	}

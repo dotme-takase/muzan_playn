@@ -20,10 +20,12 @@ public class CharacterSpriteContainer extends SpriteContainer {
 
 	private LinkedSprite leftArmSprite;
 	private LinkedSprite rightArmSprite;
+	private String imageSrc;
 
-	public CharacterSpriteContainer(String name, String src) {
+	public CharacterSpriteContainer(String name, String imageSrc) {
 		super(name, graphics().createGroupLayer());
-		Image bodyImage = assets().getImage(src);
+		this.setImageSrc(imageSrc);
+		Image bodyImage = assets().getImage(imageSrc);
 		getLayer().setOrigin(SpriteConstants.CHARACTER_RADIUS_DEFAULT,
 				SpriteConstants.CHARACTER_RADIUS_DEFAULT);
 		int bodySize = SpriteConstants.CHARACTER_RADIUS_DEFAULT * 2;
@@ -39,13 +41,13 @@ public class CharacterSpriteContainer extends SpriteContainer {
 
 		this.leftArmSprite = new LinkedSprite(null,
 				SpriteConstants.LEFT_ARM_WIDTH_DEFAULT,
-				SpriteConstants.LEFT_ARM_HEIGHT_DEFAULT, 0, bodyAnim1,
+				SpriteConstants.LEFT_ARM_HEIGHT_DEFAULT, -1, bodyAnim1,
 				SpriteConstants.LEFT_ARM_ORIGIN_DEFAULT,
 				SpriteConstants.LEFT_ARM_MAP_DEFAULT);
 
 		this.rightArmSprite = new LinkedSprite(null,
 				SpriteConstants.RIGHT_ARM_WIDTH_DEFAULT,
-				SpriteConstants.RIGHT_ARM_HEIGHT_DEFAULT, 0, bodyAnim1,
+				SpriteConstants.RIGHT_ARM_HEIGHT_DEFAULT, -1, bodyAnim1,
 				SpriteConstants.RIGHT_ARM_ORIGIN_DEFAULT,
 				SpriteConstants.RIGHT_ARM_MAP_DEFAULT);
 
@@ -71,5 +73,13 @@ public class CharacterSpriteContainer extends SpriteContainer {
 
 	public LinkedSprite getRightArmSprite() {
 		return rightArmSprite;
+	}
+
+	public String getImageSrc() {
+		return imageSrc;
+	}
+
+	public void setImageSrc(String imageSrc) {
+		this.imageSrc = imageSrc;
 	}
 }
