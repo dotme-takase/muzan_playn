@@ -1,5 +1,8 @@
 package org.dotme.arpg;
 
+import static playn.core.PlayN.assets;
+import static playn.core.PlayN.graphics;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.Map;
 import org.dotme.core.math.Vector2;
 import org.dotme.sprite.MapChip;
 import org.dotme.sprite.MapChipSprite;
+import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.arpg.SpriteConstants;
 
 public class ARPGUtils {
@@ -34,6 +38,12 @@ public class ARPGUtils {
 			angle += 360;
 		}
 		return angle;
+	}
+
+	public static void refixCharacters() {
+		ARPGContext context = ARPGContext.getInstance();
+		refixCharacters(context.characters, context.mapChipSprite,
+				context.characterPreviousPoints);
 	}
 
 	public static void refixCharacters(List<BaseCharacter> characters,
@@ -259,6 +269,26 @@ public class ARPGUtils {
 		if (characterPreviousPoints != null
 				&& characterPreviousPoints.containsKey(character.stateId)) {
 			characterPreviousPoints.remove(character.stateId);
+		}
+	}
+
+	public static void addEffect(float x, float y, String animationName) {
+		try {
+			SpriteAnimation animation = (SpriteAnimation) MasterData.effectAnimation
+					.clone();
+			animation.x = x;
+			animation.y = y;
+			animation.gotoAndPlay(animationName, false);
+			ARPGContext context = ARPGContext.getInstance();
+			context.effects.add(animation);
+			graphics().rootLayer().add(animation.getLayer());
+		} catch (Exception e) {
+		}
+	}
+
+	public static void playSound(String name) {
+		if (MasterData.effectSounds.containsKey(name)) {
+			MasterData.effectSounds.get(name).play();
 		}
 	}
 }

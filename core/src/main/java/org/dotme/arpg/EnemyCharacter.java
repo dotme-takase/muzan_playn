@@ -226,6 +226,11 @@ public class EnemyCharacter extends BaseCharacter {
 		}
 	}
 
+	public void simpleAction() {
+		ARPGContext context = ARPGContext.getInstance();
+		simpleAction(context.mapChipSprite, context.characters);
+	}
+
 	public void simpleAction(MapChipSprite mapChipSprite,
 			List<BaseCharacter> characters) {
 		float deltaX, deltaY, range, distance, theta, angleForTarget;

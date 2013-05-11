@@ -183,8 +183,8 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 						this.spriteCon
 								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_PARRIED);
 						if (this.parriedFrame > 0) {
-							// this.context.addEffect(this.x, this.y,
-							// CharacterSpriteContainer.ANIMATION_PARRIED);
+							ARPGUtils.addEffect(this.x, this.y,
+									MasterData.EFFECT_ANIMATION_PARRIED);
 						}
 						// this.context.playSound(CharacterSpriteContainer.ANIMATION_PARRIED);
 					}
@@ -200,9 +200,9 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 							.equals(this.spriteCon.getCurrentAnimationName())) {
 						this.spriteCon
 								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DAMAGE);
-						// this.context.addEffect(this.x, this.y,
-						// CharacterSpriteContainer.ANIMATION_DAMAGE);
-						// this.context.playSound("hit");
+						ARPGUtils.addEffect(this.x, this.y,
+								MasterData.EFFECT_ANIMATION_DAMAGE);
+						ARPGUtils.playSound("hit");
 					}
 					this.spriteCon.setAlpha(0.5f);
 				}
