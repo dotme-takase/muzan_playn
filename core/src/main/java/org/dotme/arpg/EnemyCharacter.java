@@ -12,15 +12,16 @@ import org.dotme.sprite.arpg.SpriteConstants;
 public class EnemyCharacter extends BaseCharacter {
 
 	private BaseCharacter target = null;
-	private String mode = RANDOM_WALK;
-	private static final String ATTACK_TO_TARGET = "attackToTarget";
-	private static final String RANDOM_WALK = "randomWalk";
+	private int mode = RANDOM_WALK;
+	private static final int ATTACK_TO_TARGET = 10;
+	private static final int RANDOM_WALK = 20;
 	private List<Vector2> path = null;
 	private Vector2 nextPath;
 
 	public EnemyCharacter(CharacterSpriteContainer spriteCon,
 			BaseItem rightArm, BaseItem leftArm) {
 		super(spriteCon, rightArm, leftArm);
+		this.teamNumber = 1;
 	}
 
 	class PathNode {
@@ -30,7 +31,9 @@ public class EnemyCharacter extends BaseCharacter {
 		PathNode parentNode;
 
 		public PathNode(float x, float y) {
+			this.pos = new Vector2(x, y);
 			this.goal = ARPGUtils.getMapPoint(target);
+
 			this.hs = (float) (Math.pow((this.pos.x - this.goal.x), 2) + Math
 					.pow((this.pos.y - this.goal.y), 2));
 			this.fs = 0;
@@ -91,8 +94,10 @@ public class EnemyCharacter extends BaseCharacter {
 				}
 			}
 		}
+
 		// スタート位置とゴール位置を設定
-		PathNode startNode = new PathNode(this.x, this.y);
+		Vector2 mapPoint = ARPGUtils.getMapPoint(this);
+		PathNode startNode = new PathNode(mapPoint.x, mapPoint.y);
 		PathNode endNode = null;
 		MapChip[][] map = mapChipSprite.getMap();
 		int mapHeight = map.length;
@@ -113,13 +118,11 @@ public class EnemyCharacter extends BaseCharacter {
 				this.add(new Vector2(0, -1));
 			}
 		};
-		int vectorsSize = vectors.size();
 		while (true) {
 			depth++;
 			if (depth > maxDepth) {
 				break;
 			}
-
 			// Openリストが空になったら解なし
 			if (openList.list.size() == 0) {
 				break;
@@ -226,7 +229,6 @@ public class EnemyCharacter extends BaseCharacter {
 	public void simpleAction(MapChipSprite mapChipSprite,
 			List<BaseCharacter> characters) {
 		float deltaX, deltaY, range, distance, theta, angleForTarget;
-		float pathDeltaX, pathDeltaY, pathTheta;
 		distance = -1;
 		range = -1;
 		if (this.target != null) {
@@ -249,14 +251,10 @@ public class EnemyCharacter extends BaseCharacter {
 		} else {
 			if (this.mode == RANDOM_WALK) {
 				if (this.path == null || this.path.size() == 0) {
-					BaseCharacter target;
-					if (this.target != null) {
-						target = this.target;
-					} else {
-						return;
-					}
 					this.path = this.pathToTargetByAStar(mapChipSprite,
 							characters, 100);
+				}
+				if (this.path != null && this.path.size() > 0) {
 					this.nextPath = this.path.get(0);
 					this.path.remove(0);
 				}
@@ -270,7 +268,7 @@ public class EnemyCharacter extends BaseCharacter {
 					}
 				}
 
-				if (!ATTACK_TO_TARGET.equals(this.mode)) {
+				if (this.mode != ATTACK_TO_TARGET) {
 					this.isWalking = true;
 					if ((this.target == null) || (Math.random() * 100 > 80)) {
 						// change to nearest target
@@ -293,8 +291,7 @@ public class EnemyCharacter extends BaseCharacter {
 							float _theta = (float) Math.atan2(_deltaY, _deltaX);
 							this.direction = (int) (_theta * 180 / Math.PI);
 						}
-					}
-					if (this.path.size() == 0) {
+					} else {
 						this.path = null;
 					}
 				}

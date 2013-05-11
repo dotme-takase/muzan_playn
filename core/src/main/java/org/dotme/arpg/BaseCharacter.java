@@ -8,7 +8,7 @@ import org.dotme.core.math.Vector2;
 import org.dotme.sprite.SpriteContainer;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 
-public abstract class BaseCharacter implements Cloneable {
+public abstract class BaseCharacter extends Vector2 implements Cloneable {
 
 	public static final int CHARACTER_ACTION_NONE = 0;
 	public static final int CHARACTER_ACTION_DEFENCE_MOTION = 1;
@@ -24,12 +24,10 @@ public abstract class BaseCharacter implements Cloneable {
 	int speed;
 	int direction;
 	int radius;
-	int x;
-	int y;
 	double vX;
 	double vY;
-	int px;
-	int py;
+	float px;
+	float py;
 	boolean isAction;
 	int action;
 	int parriedFrame;
@@ -88,6 +86,7 @@ public abstract class BaseCharacter implements Cloneable {
 		if (leftArm != null) {
 			clone.equipLeft(leftArm);
 		}
+		clone.stateId = UUID.randomUUID().toString();
 		return clone;
 	}
 
@@ -302,11 +301,4 @@ public abstract class BaseCharacter implements Cloneable {
 		}
 	}
 
-	public int getX() {
-		return this.x;
-	}
-
-	public int getY() {
-		return this.y;
-	}
 }

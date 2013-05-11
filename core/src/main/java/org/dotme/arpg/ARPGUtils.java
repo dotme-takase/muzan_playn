@@ -53,7 +53,7 @@ public class ARPGUtils {
 			Vector2 mapPoint = getMapPoint(character);
 			if (characterPreviousPoints.containsKey(character.stateId)) {
 				Vector2 prev = characterPreviousPoints.get(character.stateId);
-				Vector2 prevMapPoint = getMapPointFromVector(prev);
+				Vector2 prevMapPoint = getMapPoint(prev);
 				float dX = Math.abs(mapPoint.x - prevMapPoint.x);
 				float dY = Math.abs(mapPoint.y - prevMapPoint.y);
 				if ((dX > 1) || (dY > 1)) {
@@ -68,13 +68,13 @@ public class ARPGUtils {
 
 	private static void collideCharacters(BaseCharacter obj,
 			List<BaseCharacter> otherCharacters, MapChipSprite mapSprite) {
-		int oldX = obj.x;
-		int oldY = obj.y;
+		float oldX = obj.x;
+		float oldY = obj.y;
 		// boolean isNPC = (obj.teamNumber == 0);
 		for (BaseCharacter other : otherCharacters) {
 			if (other != obj) {
-				int deltaX = other.x - oldX;
-				int deltaY = other.y - oldY;
+				float deltaX = other.x - oldX;
+				float deltaY = other.y - oldY;
 				double range = (other.radius + obj.radius);
 				double collisionRange = range * 0.6;
 				double distance = Math.sqrt(Math.pow(deltaX, 2)
@@ -146,21 +146,15 @@ public class ARPGUtils {
 		}
 	}
 
-	public static Vector2 getMapPoint(BaseCharacter obj) {
-		return new Vector2((int) Math.floor(obj.x
-				/ SpriteConstants.TILE_SIZE_DEFAULT), (int) Math.floor(obj.y
-				/ SpriteConstants.TILE_SIZE_DEFAULT));
-	}
-
-	public static Vector2 getMapPointFromVector(Vector2 obj) {
+	public static Vector2 getMapPoint(Vector2 obj) {
 		return new Vector2((int) Math.floor(obj.x
 				/ SpriteConstants.TILE_SIZE_DEFAULT), (int) Math.floor(obj.y
 				/ SpriteConstants.TILE_SIZE_DEFAULT));
 	}
 
 	private static void collideBlocks(BaseCharacter obj, MapChipSprite mapSprite) {
-		int oldX = obj.x;
-		int oldY = obj.y;
+		float oldX = obj.x;
+		float oldY = obj.y;
 
 		int deltaW = 4;
 		int deltaH = 4;

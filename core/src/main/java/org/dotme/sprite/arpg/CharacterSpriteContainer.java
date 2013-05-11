@@ -66,6 +66,8 @@ public class CharacterSpriteContainer extends SpriteContainer {
 		this.addSprite(this.leftArmSprite);
 		this.addSprite(this.rightArmSprite);
 		this.addSprite(bodyAnim1);
+
+		this.gotoAndPlay(ANIMATION_WALK);
 	}
 
 	public LinkedSprite getLeftArmSprite() {

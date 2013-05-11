@@ -34,6 +34,8 @@ public class SpriteAnimation implements Sprite {
 			isPaused = false;
 			isAnimationEnd = false;
 			currentAnimation.setAnimationFrame(0);
+		} else {
+			System.out.println("Invalid Animation " + animationName);
 		}
 	}
 
@@ -139,7 +141,7 @@ public class SpriteAnimation implements Sprite {
 	@Override
 	public void paint(float gameTime) {
 		if (currentAnimation == null) {
-			throw new RuntimeException("No animation is currently playing.");
+			return;
 		}
 		Surface surf = layer.surface();
 		surf.clear();

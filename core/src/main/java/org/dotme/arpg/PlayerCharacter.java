@@ -3,9 +3,10 @@ package org.dotme.arpg;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 
 public class PlayerCharacter extends BaseCharacter {
-	public PlayerCharacter(CharacterSpriteContainer spriteCon, BaseItem rightArm,
-			BaseItem leftArm) {
+	public PlayerCharacter(CharacterSpriteContainer spriteCon,
+			BaseItem rightArm, BaseItem leftArm) {
 		super(spriteCon, rightArm, leftArm);
+		this.teamNumber = 0;
 	}
 
 	public void inputAction(InputStatus input) {

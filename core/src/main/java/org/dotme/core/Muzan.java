@@ -51,7 +51,6 @@ public class Muzan implements Game {
 		CharacterSpriteContainer playerCon = new CharacterSpriteContainer(
 				"player", "img/player.png");
 
-
 		player = new PlayerCharacter(playerCon, null, null);
 		input = new InputStatus();
 		pointerListener = new PointerListener();
@@ -61,7 +60,7 @@ public class Muzan implements Game {
 			characters.add(player);
 			ARPGUtils.warpToRandomPoint(player, mapChipSprite,
 					characterPreviousPoints);
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 5; i++) {
 				EnemyCharacter enemy = (EnemyCharacter) MasterData.enemyData
 						.get(0).clone();
 				characters.add(enemy);
@@ -82,8 +81,8 @@ public class Muzan implements Game {
 		// here!
 		ARPGUtils.refixCharacters(characters, mapChipSprite,
 				characterPreviousPoints);
-		this.viewPoint.x = player.getX() - graphics().width() / 2.0f;
-		this.viewPoint.y = player.getY() - graphics().height() / 2.0f;
+		this.viewPoint.x = player.x - graphics().width() / 2.0f;
+		this.viewPoint.y = player.y - graphics().height() / 2.0f;
 
 		mapChipSprite.setOffset(viewPoint);
 		mapChipSprite.paint(alpha);
@@ -106,10 +105,12 @@ public class Muzan implements Game {
 			if (character instanceof EnemyCharacter) {
 				((EnemyCharacter) character).simpleAction(mapChipSprite,
 						characters);
+				character.updateFrame();
 			} else if (character instanceof PlayerCharacter) {
 				((PlayerCharacter) character).inputAction(input);
+				character.updateFrame();
 			}
-			character.updateFrame();
+
 		}
 	}
 
