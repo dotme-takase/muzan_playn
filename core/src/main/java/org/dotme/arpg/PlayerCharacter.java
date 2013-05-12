@@ -30,6 +30,11 @@ public class PlayerCharacter extends BaseCharacter {
 						if (this.defenceFrame > 0) {
 							this.defenceFrame--;
 						}
+					} else if (this.action == BaseCharacter.CHARACTER_ACTION_ATTACK) {
+						if (input.isDoubleDown) {
+							this.action = BaseCharacter.CHARACTER_ACTION_DEFENCE_MOTION;
+							this.defenceFrame = 16;
+						}
 					}
 				} else {
 					this.isAction = true;
@@ -40,9 +45,8 @@ public class PlayerCharacter extends BaseCharacter {
 				this.isWalking = false;
 				if (!this.isAction && input.isMouseClick) {
 					this.isAction = true;
-					this.action = BaseCharacter.CHARACTER_ACTION_DEFENCE_MOTION;
+					this.action = BaseCharacter.CHARACTER_ACTION_ATTACK;
 				}
-
 				if (this.isAction) {
 					if (this.action == BaseCharacter.CHARACTER_ACTION_ATTACK) {
 					} else if ((this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE)

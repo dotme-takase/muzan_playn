@@ -166,7 +166,11 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 					this.vY = Math.sin(this.direction * Math.PI / 180) * -2;
 				}
 			} else if (this.action == CHARACTER_ACTION_DEFENCE) {
-
+				if (!CharacterSpriteContainer.ANIMATION_DEFENCE
+						.equals(this.spriteCon.getCurrentAnimationName())) {
+					this.spriteCon
+							.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DEFENCE);
+				}
 			} else if (this.action == CHARACTER_ACTION_PARRIED) {
 				if (this.spriteCon.isAnimationEnd()) {
 					if (this.parriedFrame <= 0) {
@@ -218,7 +222,7 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 				}
 				ARPGUtils.playSound("defeat");
 				if (characters.contains(this)) {
-					//characters.remove(this);
+					// characters.remove(this);
 					this.getSpriteContainer().getLayer().destroy();
 				}
 			} else if (this.action == CHARACTER_ACTION_ATTACK) {

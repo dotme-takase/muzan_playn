@@ -49,7 +49,9 @@ public class ARPGContext {
 		CharacterSpriteContainer playerCon = new CharacterSpriteContainer(
 				"player", "img/player.png");
 
-		player = new PlayerCharacter(playerCon, null, null);
+		player = new PlayerCharacter(playerCon,
+				MasterData.itemData.get("shortSword"),
+				MasterData.itemData.get("woodenShield"));
 		input = new InputStatus();
 
 		characters = new ArrayList<BaseCharacter>();

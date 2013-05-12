@@ -154,7 +154,11 @@ public class MasterData {
 				"enemy1", "img/enemy1.png");
 		{
 			add(new EnemyCharacter(enemy1Con, itemData.get("shortSword"),
-					itemData.get("woodenShield")));
+					itemData.get("woodenShield")) {
+				{
+					this.speed = 5;
+				}
+			});
 		}
 	};
 

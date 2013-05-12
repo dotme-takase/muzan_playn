@@ -44,10 +44,10 @@ public class Muzan implements Game {
 		for (Iterator<BaseCharacter> it = arpgContext.characters.iterator(); it
 				.hasNext();) {
 			BaseCharacter character = it.next();
-			if(character.getSpriteContainer().getLayer().destroyed()){
+			if (character.getSpriteContainer().getLayer().destroyed()) {
 				it.remove();
 			} else {
-			character.paintInView(alpha, arpgContext.viewPoint);
+				character.paintInView(alpha, arpgContext.viewPoint);
 			}
 		}
 
@@ -83,7 +83,7 @@ public class Muzan implements Game {
 
 	@Override
 	public int updateRate() {
-		return 25;
+		return 30;
 	}
 
 	private class PointerListener implements playn.core.Pointer.Listener {
@@ -108,26 +108,37 @@ public class Muzan implements Game {
 					arpgContext.input.isCursor = true;
 				}
 			} else {
-				if (mouseUpTime < 0 || mouseUpTime >= 8) {
+				if (mouseUpTime >= 0 && mouseUpTime < 8) {
+					if (!arpgContext.input.isDoubleClick) {
+						arpgContext.input.isDoubleDown = true;
+					}
+				} else {
 					arpgContext.input.isCursor = true;
 				}
 			}
 			mouseDownTime = 0;
 			mouseUpTime = -1;
 			arpgContext.input.isMouseClick = false;
+			arpgContext.input.isDoubleClick = false;
 		}
 
 		@Override
 		public void onPointerEnd(Event event) {
-			arpgContext.input.isCursor = arpgContext.input.isMouseDown = false;
 			if (mouseDownTime < 8) {
 				arpgContext.input.isMouseClick = true;
+				if (arpgContext.input.isDoubleDown) {
+					arpgContext.input.isDoubleClick = true;
+				}
 				mouseUpTime = 0;
 			} else {
 				mouseUpTime = -1;
 				arpgContext.input.axisX = arpgContext.input.axisY = 0;
 			}
 			mouseDownTime = -1;
+
+			arpgContext.input.isCursor = false;
+			arpgContext.input.isMouseDown = false;
+			arpgContext.input.isDoubleDown = false;
 		}
 
 		@Override
