@@ -120,7 +120,7 @@ public class SpriteContainer {
 		}
 		return null;
 	}
-	
+
 	public int getFrameCount() {
 		for (Sprite sprite : spriteList) {
 			if (sprite instanceof SpriteAnimation) {
@@ -135,11 +135,21 @@ public class SpriteContainer {
 		for (Sprite sprite : spriteList) {
 			if (sprite instanceof SpriteAnimation) {
 				if (animationFrame < 0) {
+					((SpriteAnimation) sprite).updateFrame(gameTime);
 					animationFrame = ((SpriteAnimation) sprite)
 							.getAnimationFrame();
+				} else {
+					((SpriteAnimation) sprite)
+							.setAnimationFrame(animationFrame);
 				}
 			}
-			sprite.paint(gameTime);
+		}
+		for (Sprite sprite : spriteList) {
+			if (sprite instanceof SpriteAnimation) {
+				((SpriteAnimation) sprite).paintCurrentFrame();
+			} else {
+				sprite.paint(gameTime);
+			}
 		}
 	}
 

@@ -154,14 +154,27 @@ public class SpriteAnimation extends Vector2 implements Sprite, Cloneable {
 		this.paint(gameTime);
 	}
 
-	// Advances the time position and draws the current frame of the animation.
-	@Override
-	public void paint(float gameTime) {
+	public void paintCurrentFrame() {
 		if (currentAnimation == null) {
 			return;
 		}
 		Surface surf = layer.surface();
 		surf.clear();
+
+		// Calculate the source rectangle of the current frame.
+		Rectangle source = new Rectangle(
+				(int) ((currentAnimation.getCurrentFrame() * this.frameWidth) % texture
+						.width()),
+				(int) (Math.floor((currentAnimation.getCurrentFrame() * this.frameWidth)
+						/ texture.width()) * this.frameHeight),
+				(int) this.frameWidth, (int) this.frameHeight);
+
+		// Draw the current frame.
+		surf.drawImage(this.texture, 0, 0, this.frameWidth, this.frameHeight,
+				source.x, source.y, source.width, source.height);
+	}
+
+	public void updateFrame(float gameTime) {
 		// Process passing time.
 		if (!isPaused) {
 			time += gameTime;
@@ -185,18 +198,13 @@ public class SpriteAnimation extends Vector2 implements Sprite, Cloneable {
 				}
 			}
 		}
+	}
 
-		// Calculate the source rectangle of the current frame.
-		Rectangle source = new Rectangle(
-				(int) ((currentAnimation.getCurrentFrame() * this.frameWidth) % texture
-						.width()),
-				(int) (Math.floor((currentAnimation.getCurrentFrame() * this.frameWidth)
-						/ texture.width()) * this.frameHeight),
-				(int) this.frameWidth, (int) this.frameHeight);
-
-		// Draw the current frame.
-		surf.drawImage(this.texture, 0, 0, this.frameWidth, this.frameHeight,
-				source.x, source.y, source.width, source.height);
+	// Advances the time position and draws the current frame of the animation.
+	@Override
+	public void paint(float gameTime) {
+		updateFrame(gameTime);
+		paintCurrentFrame();
 	}
 
 	@Override
