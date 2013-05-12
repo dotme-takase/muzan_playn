@@ -41,8 +41,14 @@ public class Muzan implements Game {
 		arpgContext.mapChipSprite.setOffset(arpgContext.viewPoint);
 		arpgContext.mapChipSprite.paint(alpha);
 
-		for (BaseCharacter character : arpgContext.characters) {
+		for (Iterator<BaseCharacter> it = arpgContext.characters.iterator(); it
+				.hasNext();) {
+			BaseCharacter character = it.next();
+			if(character.getSpriteContainer().getLayer().destroyed()){
+				it.remove();
+			} else {
 			character.paintInView(alpha, arpgContext.viewPoint);
+			}
 		}
 
 		for (Iterator<SpriteAnimation> it = arpgContext.effects.iterator(); it
@@ -50,7 +56,7 @@ public class Muzan implements Game {
 			SpriteAnimation effect = it.next();
 			effect.paintInView(alpha, arpgContext.viewPoint);
 			if (effect.isAnimationEnd()) {
-				graphics().rootLayer().remove(effect.getLayer());
+				effect.getLayer().destroy();
 				it.remove();
 			}
 		}
@@ -68,12 +74,10 @@ public class Muzan implements Game {
 		for (BaseCharacter character : arpgContext.characters) {
 			if (character instanceof EnemyCharacter) {
 				((EnemyCharacter) character).simpleAction();
-				character.updateFrame();
 			} else if (character instanceof PlayerCharacter) {
 				((PlayerCharacter) character).inputAction(arpgContext.input);
-				character.updateFrame();
 			}
-
+			character.updateFrame(arpgContext.characters);
 		}
 	}
 

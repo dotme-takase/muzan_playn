@@ -1,6 +1,5 @@
 package org.dotme.arpg;
 
-import static playn.core.PlayN.assets;
 import static playn.core.PlayN.graphics;
 
 import java.util.ArrayList;
@@ -13,6 +12,8 @@ import org.dotme.sprite.MapChip;
 import org.dotme.sprite.MapChipSprite;
 import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.arpg.SpriteConstants;
+
+import playn.core.Sound;
 
 public class ARPGUtils {
 	public static Vector2 getRandomPoint(MapChip[][] map) {
@@ -104,11 +105,11 @@ public class ARPGUtils {
 
 					int weaponRange = 0;
 					int weaponPoint = 0;
-					// ToDo
-					// if (obj.rightArm.type == BitmapItem.TYPE_SWORD) {
-					// weaponRange = obj.rightArm.range;
-					// weaponPoint = obj.rightArm.bonusPoint;
-					// }
+					if (obj.rightArm != null
+							&& obj.rightArm.getType() == BaseItem.TYPE_SWORD) {
+						weaponRange = obj.rightArm.getRange();
+						weaponPoint = obj.rightArm.getBasePoint();
+					}
 
 					if ((distance < range + weaponRange)
 							&& ((angleForOther > -20) && (angleForOther < 80))) {
@@ -288,7 +289,13 @@ public class ARPGUtils {
 
 	public static void playSound(String name) {
 		if (MasterData.effectSounds.containsKey(name)) {
-			MasterData.effectSounds.get(name).play();
+			List<Sound> list = MasterData.effectSounds.get(name);
+			for (Sound sound : list) {
+				if (!sound.isPlaying()) {
+					sound.play();
+					break;
+				}
+			}
 		}
 	}
 }

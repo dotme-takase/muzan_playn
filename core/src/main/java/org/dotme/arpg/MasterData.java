@@ -169,16 +169,30 @@ public class MasterData {
 		}
 	};
 
-	public static final Map<String, Sound> effectSounds = new HashMap<String, Sound>() {
+	public static final int maxConcurrentSound = 10;
+	public static final Map<String, List<Sound>> effectSounds = new HashMap<String, List<Sound>>() {
 		private static final long serialVersionUID = -4439019932306021680L;
 		{
-			put(EFFECT_SOUND_ATTACK, assets().getSound("se/attack"));
-			put(EFFECT_SOUND_DEFEAT, assets().getSound("se/defeat"));
-			put(EFFECT_SOUND_DOWNSTAIR, assets().getSound("se/downstair"));
-			put(EFFECT_SOUND_HEAL, assets().getSound("se/heal"));
-			put(EFFECT_SOUND_HIT, assets().getSound("se/hit"));
-			put(EFFECT_SOUND_PARRIED, assets().getSound("se/parried"));
-			put(EFFECT_SOUND_PICKUP, assets().getSound("se/pickup"));
+			HashMap<String, String> nameMap = new HashMap<String, String>() {
+				private static final long serialVersionUID = 1L;
+				{
+					put(EFFECT_SOUND_ATTACK, "se/attack");
+					put(EFFECT_SOUND_DEFEAT, "se/defeat");
+					put(EFFECT_SOUND_DOWNSTAIR, "se/downstair");
+					put(EFFECT_SOUND_HEAL, "se/heal");
+					put(EFFECT_SOUND_HIT, "se/hit");
+					put(EFFECT_SOUND_PARRIED, "se/parried");
+					put(EFFECT_SOUND_PICKUP, "se/pickup");
+				}
+			};
+
+			for (Map.Entry<String, String> e : nameMap.entrySet()) {
+				List<Sound> list = new ArrayList<Sound>();
+				for (int i = 0; i < maxConcurrentSound; i++) {
+					list.add(assets().getSound(e.getValue()));
+				}
+				put(e.getKey(), list);
+			}
 		}
 	};
 

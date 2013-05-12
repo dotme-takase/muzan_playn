@@ -57,7 +57,7 @@ public class ARPGContext {
 			characters.add(player);
 			ARPGUtils.warpToRandomPoint(player, mapChipSprite,
 					characterPreviousPoints);
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 1; i++) {
 				EnemyCharacter enemy = (EnemyCharacter) MasterData.enemyData
 						.get(0).clone();
 				characters.add(enemy);

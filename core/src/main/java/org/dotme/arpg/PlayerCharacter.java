@@ -6,6 +6,7 @@ public class PlayerCharacter extends BaseCharacter {
 	public PlayerCharacter(CharacterSpriteContainer spriteCon,
 			BaseItem rightArm, BaseItem leftArm) {
 		super(spriteCon, rightArm, leftArm);
+		this.MHP = this.HP = 2500;
 		this.teamNumber = 0;
 	}
 

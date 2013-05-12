@@ -1,6 +1,7 @@
 package org.dotme.arpg;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -136,7 +137,7 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 		}
 	}
 
-	public void updateFrame() {
+	public void updateFrame(List<BaseCharacter> characters) {
 		this.spriteCon.setAlpha(1.0f);
 		if (this.HP <= 0) {
 			this.die();
@@ -207,7 +208,19 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 					this.spriteCon.setAlpha(0.5f);
 				}
 			} else if (this.action == CHARACTER_ACTION_DEAD) {
-				// ToDo
+				float size = this.radius / 2;
+				float half = size / 2;
+				for (int i = 0; i < 4; i++) {
+					ARPGUtils.addEffect(
+							(float) (this.x + Math.random() * size - half),
+							(float) (this.y + Math.random() * size - half),
+							"dead");
+				}
+				ARPGUtils.playSound("defeat");
+				if (characters.contains(this)) {
+					//characters.remove(this);
+					this.getSpriteContainer().getLayer().destroy();
+				}
 			} else if (this.action == CHARACTER_ACTION_ATTACK) {
 				if (this.spriteCon.isAnimationEnd()
 						&& getSpriteContainer()
@@ -241,8 +254,7 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 							this.spriteCon
 									.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK);
 						}
-
-						// this.context.playSound(CharacterSpriteContainer.ANIMATION_ATTACK);
+						ARPGUtils.playSound(MasterData.EFFECT_SOUND_ATTACK);
 					}
 
 					int attackEnd = this.spriteCon.getFrameCount()

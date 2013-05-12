@@ -304,7 +304,6 @@ public class EnemyCharacter extends BaseCharacter {
 				if (this.target.HP <= 0) {
 					this.mode = RANDOM_WALK;
 				} else if (distance < range + this.rightArm.getRange()) {
-					int dice = (int) (Math.random() * 4);
 					if (!this.isAction) {
 						this.isWalking = false;
 						this.isAction = true;
