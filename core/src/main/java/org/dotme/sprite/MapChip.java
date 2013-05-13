@@ -1,17 +1,5 @@
 package org.dotme.sprite;
 
-import static playn.core.PlayN.graphics;
-
-import java.awt.Rectangle;
-import java.util.List;
-
-import org.dotme.core.math.Vector2;
-import org.dotme.core.math.Vector2withDegree;
-
-import playn.core.Image;
-import playn.core.Layer;
-import playn.core.Surface;
-import playn.core.SurfaceLayer;
 
 public class MapChip {
 	public static final int MAPCHIP_TYPE_EMPTY = 0;

@@ -39,7 +39,7 @@ public class ARPGContext {
 				SpriteConstants.TILE_SIZE_DEFAULT, graphics().width(),
 				graphics().height());
 		mapGenerator = new MapGenerator();
-		MapChip[][] mapChips = mapGenerator.generate(2, 2);
+		MapChip[][] mapChips = mapGenerator.generate(4, 3);
 		viewPoint = new Vector2(0, 0);
 
 		mapChipSprite.setOffset(viewPoint);
@@ -59,7 +59,7 @@ public class ARPGContext {
 			characters.add(player);
 			ARPGUtils.warpToRandomPoint(player, mapChipSprite,
 					characterPreviousPoints);
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < 5; i++) {
 				EnemyCharacter enemy = (EnemyCharacter) MasterData.enemyData
 						.get(0).clone();
 				characters.add(enemy);

@@ -282,8 +282,12 @@ public class EnemyCharacter extends BaseCharacter {
 						Vector2 mapPt = ARPGUtils.getMapPoint(this);
 						if ((this.nextPath.x == mapPt.x)
 								&& (this.nextPath.y == mapPt.y)) {
-							this.nextPath = this.path.get(0);
-							this.path.remove(0);
+							if (this.path != null && this.path.size() > 0) {
+								this.nextPath = this.path.get(0);
+								this.path.remove(0);
+							} else {
+								this.nextPath = null;
+							}
 						}
 						if (this.nextPath != null) {
 							Vector2 nextPoint = new Vector2(

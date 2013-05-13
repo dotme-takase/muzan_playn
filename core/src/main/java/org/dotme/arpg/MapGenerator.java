@@ -11,7 +11,7 @@ public class MapGenerator {
 	public static final int MAP_WEST = 2;
 	public static final int MAP_EAST = 3;
 
-	private static final MapChip w1_c = new MapChip(6,
+	private static final MapChip w1_c = new MapChip(-1,
 			MapChip.MAPCHIP_TYPE_WALL, "w1_c");
 	private static final MapChip w1_tl1 = new MapChip(0,
 			MapChip.MAPCHIP_TYPE_WALL, "w1_tl1");
@@ -37,7 +37,7 @@ public class MapGenerator {
 			MapChip.MAPCHIP_TYPE_WALL, "w1_tr2");
 	private static final MapChip w1_tl2 = new MapChip(9,
 			MapChip.MAPCHIP_TYPE_WALL, "w1_tl2");
-	private static final MapChip f1 = new MapChip(16,
+	private static final MapChip f1 = new MapChip(20,
 			MapChip.MAPCHIP_TYPE_FLOOR, "f1");
 	private static final MapChip s1 = new MapChip(21,
 			MapChip.MAPCHIP_TYPE_DOWNSTAIR, "s1");

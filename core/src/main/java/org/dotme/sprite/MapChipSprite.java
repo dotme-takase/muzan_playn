@@ -3,10 +3,8 @@ package org.dotme.sprite;
 import static playn.core.PlayN.graphics;
 
 import java.awt.Rectangle;
-import java.util.List;
 
 import org.dotme.core.math.Vector2;
-import org.dotme.core.math.Vector2withDegree;
 
 import playn.core.Image;
 import playn.core.Layer;
@@ -80,15 +78,20 @@ public class MapChipSprite implements Sprite {
 							&& (tx < layer.width() + this.frameHeight)
 							&& (ty > -1.0f * this.frameWidth)
 							&& (ty < layer.height() + this.frameHeight)) {
-						Rectangle source = new Rectangle((int) ((block
-								.getFrame() * this.frameWidth) % texture
-								.width()), (int) (Math
-								.floor((block.getFrame() * this.frameWidth)
-										/ texture.width()) * this.frameHeight),
-								(int) this.frameWidth, (int) this.frameHeight);
-						surf.drawImage(this.texture, tx, ty, this.frameWidth,
-								this.frameHeight, source.x, source.y,
-								source.width, source.height);
+
+						if (block.getFrame() >= 0) {
+							Rectangle source = new Rectangle(
+									(int) ((block.getFrame() * this.frameWidth) % texture
+											.width()),
+									(int) (Math.floor((block.getFrame() * this.frameWidth)
+											/ texture.width()) * this.frameHeight),
+									(int) this.frameWidth,
+									(int) this.frameHeight);
+							surf.drawImage(this.texture, tx, ty,
+									this.frameWidth, this.frameHeight,
+									source.x, source.y, source.width,
+									source.height);
+						}
 					}
 				}
 			}

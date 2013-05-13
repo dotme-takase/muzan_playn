@@ -191,7 +191,8 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 							ARPGUtils.addEffect(this.x, this.y,
 									MasterData.EFFECT_ANIMATION_PARRIED);
 						}
-						// this.context.playSound(CharacterSpriteContainer.ANIMATION_PARRIED);
+						ARPGUtils
+								.playSound(MasterData.EFFECT_ANIMATION_PARRIED);
 					}
 					this.vX = Math.cos(this.direction * Math.PI / 180) * -1;
 					this.vY = Math.sin(this.direction * Math.PI / 180) * -1;
