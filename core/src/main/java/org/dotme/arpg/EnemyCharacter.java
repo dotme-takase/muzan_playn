@@ -17,6 +17,7 @@ public class EnemyCharacter extends BaseCharacter {
 	private static final int RANDOM_WALK = 20;
 	private List<Vector2> path = null;
 	private Vector2 nextPath;
+	private int defenceFrame = 0;
 
 	public EnemyCharacter(CharacterSpriteContainer spriteCon,
 			BaseItem rightArm, BaseItem leftArm) {
@@ -234,12 +235,13 @@ public class EnemyCharacter extends BaseCharacter {
 	public void simpleAction(MapChipSprite mapChipSprite,
 			List<BaseCharacter> characters) {
 		float deltaX, deltaY, range, distance, theta, angleForTarget;
+		this.defenceFrame = Math.max(this.defenceFrame - 1, 0);
 		distance = -1;
 		range = -1;
 		if (this.target != null) {
 			deltaX = this.target.x - this.x;
 			deltaY = this.target.y - this.y;
-			range = this.target.radius * 2;
+			range = this.target.radius;
 			distance = (float) Math.sqrt(Math.pow(deltaX, 2)
 					+ Math.pow(deltaY, 2));
 			theta = (float) Math.atan2(deltaY, deltaX);
@@ -307,11 +309,14 @@ public class EnemyCharacter extends BaseCharacter {
 			} else if (this.mode == ATTACK_TO_TARGET) {
 				if (this.target.HP <= 0) {
 					this.mode = RANDOM_WALK;
-				} else if (distance < range + this.rightArm.getRange()) {
+				} else if (distance < range + this.rightArm.getRange() * 0.75) {
+					double dice = Math.random() * 4;
 					if (!this.isAction) {
 						this.isWalking = false;
 						this.isAction = true;
 						this.action = BaseCharacter.CHARACTER_ACTION_DEFENCE_MOTION;
+						this.defenceFrame = (int) Math.max((32 - this.speed)
+								+ Math.round(dice), 0);
 					} else {
 						if (this.isWalking) {
 							this.action = BaseCharacter.CHARACTER_ACTION_NONE;
@@ -319,8 +324,13 @@ public class EnemyCharacter extends BaseCharacter {
 						}
 						if ((this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE)
 								|| (this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE_MOTION)) {
-							this.action = BaseCharacter.CHARACTER_ACTION_ATTACK;
+							if (this.defenceFrame <= 0) {
+								this.action = BaseCharacter.CHARACTER_ACTION_ATTACK;
+							}
 						}
+					}
+
+					if (this.action == BaseCharacter.CHARACTER_ACTION_ATTACK) {
 					}
 				} else {
 					this.isWalking = true;

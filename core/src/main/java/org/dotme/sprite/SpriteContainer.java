@@ -103,6 +103,15 @@ public class SpriteContainer {
 		return 0;
 	}
 
+	public int getCurrentAnimationFrameStart() {
+		for (Sprite sprite : spriteList) {
+			if (sprite instanceof SpriteAnimation) {
+				return ((SpriteAnimation) sprite).getCurrentAnimationFrameStart();
+			}
+		}
+		return 0;
+	}
+
 	public int getAnimationFrame() {
 		for (Sprite sprite : spriteList) {
 			if (sprite instanceof SpriteAnimation) {

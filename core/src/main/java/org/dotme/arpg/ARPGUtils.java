@@ -101,7 +101,7 @@ public class ARPGUtils {
 						&& obj.isAction
 						&& !obj.isWalking
 						&& (obj.action == BaseCharacter.CHARACTER_ACTION_ATTACK)
-						&& (obj.attackFrame > 2)) {
+						&& (obj.attackFrame >= 2)) {
 
 					int weaponRange = 0;
 					int weaponPoint = 0;
@@ -115,9 +115,8 @@ public class ARPGUtils {
 							&& ((angleForOther > -20) && (angleForOther < 80))) {
 						// right
 						if ((other.isAction && (other.action == BaseCharacter.CHARACTER_ACTION_DEFENCE))
-								// ToDo && (other.leftArm != null &&
-								// other.leftArm.type ==
-								// BitmapItem.TYPE_SHIELD))
+								&& ((other.leftArm != null && other.leftArm
+										.getType() == BaseItem.TYPE_SHIELD))
 								&& ((angleForObj > -30) && (angleForObj < 30))) {
 							double kickBackRange = -1 * Math.random()
 									* obj.radius / 4;

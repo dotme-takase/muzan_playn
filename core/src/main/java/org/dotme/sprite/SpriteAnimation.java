@@ -55,8 +55,6 @@ public class SpriteAnimation extends Vector2 implements Sprite, Cloneable {
 			isPaused = false;
 			isAnimationEnd = false;
 			currentAnimation.setAnimationFrame(0);
-		} else {
-			System.out.println("Invalid Animation " + animationName);
 		}
 	}
 
@@ -124,6 +122,13 @@ public class SpriteAnimation extends Vector2 implements Sprite, Cloneable {
 	public int getCurrentFrame() {
 		if (currentAnimation != null) {
 			return currentAnimation.getCurrentFrame();
+		}
+		return 0;
+	}
+
+	public int getCurrentAnimationFrameStart() {
+		if (currentAnimation != null) {
+			return currentAnimation.getFrameStart();
 		}
 		return 0;
 	}

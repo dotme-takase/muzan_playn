@@ -239,7 +239,7 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 					this.vX = this.vY = 0;
 					this.action = CHARACTER_ACTION_NONE;
 				} else {
-					this.attackFrame = this.spriteCon.getAnimationFrame();
+					this.attackFrame = this.spriteCon.getCurrentFrame() - this.spriteCon.getCurrentAnimationFrameStart();
 					if ((this.spriteCon.isPaused())
 							|| (!getSpriteContainer()
 									.getCurrentAnimationName()
