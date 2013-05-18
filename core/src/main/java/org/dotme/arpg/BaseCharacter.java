@@ -151,67 +151,19 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 			this.vY = Math.sin(this.direction * Math.PI / 180) * this.speed;
 		} else if (this.isAction) {
 			this.vX = this.vY = 0;
-			if (this.action == CHARACTER_ACTION_DEFENCE_MOTION) {
-				if (this.spriteCon.isAnimationEnd()) {
-					this.vX = this.vY = 0;
-					this.action = CHARACTER_ACTION_DEFENCE;
-				} else {
-					if (!CharacterSpriteContainer.ANIMATION_DEFENCE
-							.equals(this.spriteCon.getCurrentAnimationName())) {
-						this.spriteCon
-								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DEFENCE);
-					}
-
-					this.vX = Math.cos(this.direction * Math.PI / 180) * -2;
-					this.vY = Math.sin(this.direction * Math.PI / 180) * -2;
-				}
-			} else if (this.action == CHARACTER_ACTION_DEFENCE) {
-				if (!CharacterSpriteContainer.ANIMATION_DEFENCE
+			if (this.action == CHARACTER_ACTION_DAMAGE) {
+				if (!CharacterSpriteContainer.ANIMATION_DAMAGE
 						.equals(this.spriteCon.getCurrentAnimationName())) {
 					this.spriteCon
-							.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DEFENCE);
-				}
-			} else if (this.action == CHARACTER_ACTION_PARRIED) {
-				if (this.spriteCon.isAnimationEnd()) {
-					if (this.parriedFrame <= 0) {
-						this.vX = this.vY = 0;
-						this.action = CHARACTER_ACTION_NONE;
-					} else {
-						this.parriedFrame--;
-						this.spriteCon
-								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_PARRIED);
-					}
-				} else {
-					if (!CharacterSpriteContainer.ANIMATION_PARRIED
-							.equals(getSpriteContainer()
-									.getCurrentAnimationName())) {
-						this.spriteCon
-								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_PARRIED);
-						if (this.parriedFrame > 0) {
-							ARPGUtils.addEffect(this.x, this.y,
-									MasterData.EFFECT_ANIMATION_PARRIED);
-						}
-						ARPGUtils
-								.playSound(MasterData.EFFECT_ANIMATION_PARRIED);
-					}
-					this.vX = Math.cos(this.direction * Math.PI / 180) * -1;
-					this.vY = Math.sin(this.direction * Math.PI / 180) * -1;
-				}
-			} else if (this.action == CHARACTER_ACTION_DAMAGE) {
-				if (this.spriteCon.isAnimationEnd()) {
+							.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DAMAGE);
+					ARPGUtils.addEffect(this.x, this.y,
+							MasterData.EFFECT_ANIMATION_DAMAGE);
+					ARPGUtils.playSound("hit");
+				} else if (this.spriteCon.isAnimationEnd()) {
 					this.vX = this.vY = 0;
 					this.action = CHARACTER_ACTION_NONE;
-				} else {
-					if (!CharacterSpriteContainer.ANIMATION_DAMAGE
-							.equals(this.spriteCon.getCurrentAnimationName())) {
-						this.spriteCon
-								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DAMAGE);
-						ARPGUtils.addEffect(this.x, this.y,
-								MasterData.EFFECT_ANIMATION_DAMAGE);
-						ARPGUtils.playSound("hit");
-					}
-					this.spriteCon.setAlpha(0.5f);
 				}
+				this.spriteCon.setAlpha(0.5f);
 			} else if (this.action == CHARACTER_ACTION_DEAD) {
 				float size = this.radius / 2;
 				float half = size / 2;
@@ -226,54 +178,81 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 					// characters.remove(this);
 					this.getSpriteContainer().getLayer().destroy();
 				}
-			} else if (this.action == CHARACTER_ACTION_ATTACK) {
-				if (this.spriteCon.isAnimationEnd()
-						&& getSpriteContainer()
-								.getCurrentAnimationName()
-								.startsWith(
-										CharacterSpriteContainer.ANIMATION_ATTACK)) {
-					if (this.action != CHARACTER_ACTION_ATTACK) {
-						return;
+			} else if (this.action == CHARACTER_ACTION_DEFENCE_MOTION) {
+				if (!CharacterSpriteContainer.ANIMATION_DEFENCE
+						.equals(this.spriteCon.getCurrentAnimationName())) {
+					this.spriteCon
+							.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DEFENCE);
+				} else if (this.spriteCon.isAnimationEnd()) {
+					this.vX = this.vY = 0;
+					this.action = CHARACTER_ACTION_DEFENCE;
+				}
+				this.vX = Math.cos(this.direction * Math.PI / 180) * -2;
+				this.vY = Math.sin(this.direction * Math.PI / 180) * -2;
+			} else if (this.action == CHARACTER_ACTION_DEFENCE) {
+				if (!CharacterSpriteContainer.ANIMATION_DEFENCE
+						.equals(this.spriteCon.getCurrentAnimationName())) {
+					this.spriteCon
+							.gotoAndPlay(CharacterSpriteContainer.ANIMATION_DEFENCE);
+				}
+			} else if (this.action == CHARACTER_ACTION_PARRIED) {
+				if (!CharacterSpriteContainer.ANIMATION_PARRIED
+						.equals(getSpriteContainer().getCurrentAnimationName())) {
+					this.spriteCon
+							.gotoAndPlay(CharacterSpriteContainer.ANIMATION_PARRIED);
+					if (this.parriedFrame > 0) {
+						ARPGUtils.addEffect(this.x, this.y,
+								MasterData.EFFECT_ANIMATION_PARRIED);
 					}
+					ARPGUtils.playSound(MasterData.EFFECT_ANIMATION_PARRIED);
+				} else if (this.spriteCon.isAnimationEnd()) {
+					if (this.parriedFrame <= 0) {
+						this.vX = this.vY = 0;
+						this.action = CHARACTER_ACTION_NONE;
+					} else {
+						this.parriedFrame--;
+						this.spriteCon
+								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_PARRIED);
+					}
+				}
+				this.vX = Math.cos(this.direction * Math.PI / 180) * -1;
+				this.vY = Math.sin(this.direction * Math.PI / 180) * -1;
+			} else if (this.action == CHARACTER_ACTION_ATTACK) {
+				this.attackFrame = this.spriteCon.getCurrentFrame()
+						- this.spriteCon.getCurrentAnimationFrameStart();
+				if (!getSpriteContainer().getCurrentAnimationName().startsWith(
+						CharacterSpriteContainer.ANIMATION_ATTACK)) {
+					int weaponSpeed = 2;
+					if (this.rightArm != null) {
+						weaponSpeed = this.rightArm.getSpeed();
+					}
+					if (weaponSpeed >= 2) {
+						this.spriteCon
+								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK_2);
+					} else if (weaponSpeed == 1) {
+						this.spriteCon
+								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK_1);
+					} else {
+						this.spriteCon
+								.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK);
+					}
+					ARPGUtils.playSound(MasterData.EFFECT_SOUND_ATTACK);
+				} else if (this.spriteCon.isAnimationEnd()) {
 					this.attackFrame = 0;
 					this.vX = this.vY = 0;
 					this.action = CHARACTER_ACTION_NONE;
+				}
+				int attackEnd = this.spriteCon.getFrameCount()
+						- this.spriteCon.getAnimationFrame();
+				if (attackEnd > 6) {
+					this.vX = Math.cos(this.direction * Math.PI / 180) * -2;
+					this.vY = Math.sin(this.direction * Math.PI / 180) * -2;
+				} else if (attackEnd == 1) {
+					this.vX = Math.cos(this.direction * Math.PI / 180) * -3;
+					this.vY = Math.sin(this.direction * Math.PI / 180) * -3;
 				} else {
-					this.attackFrame = this.spriteCon.getCurrentFrame() - this.spriteCon.getCurrentAnimationFrameStart();
-					if ((this.spriteCon.isPaused())
-							|| (!getSpriteContainer()
-									.getCurrentAnimationName()
-									.startsWith(
-											CharacterSpriteContainer.ANIMATION_ATTACK))) {
-						int weaponSpeed = 2;
-						if (this.rightArm != null) {
-							weaponSpeed = this.rightArm.getSpeed();
-						}
-						if (weaponSpeed >= 2) {
-							this.spriteCon
-									.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK_2);
-						} else if (weaponSpeed == 1) {
-							this.spriteCon
-									.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK_1);
-						} else {
-							this.spriteCon
-									.gotoAndPlay(CharacterSpriteContainer.ANIMATION_ATTACK);
-						}
-						ARPGUtils.playSound(MasterData.EFFECT_SOUND_ATTACK);
-					}
-
-					int attackEnd = this.spriteCon.getFrameCount()
-							- this.spriteCon.getAnimationFrame();
-					if (attackEnd > 6) {
-						this.vX = Math.cos(this.direction * Math.PI / 180) * -2;
-						this.vY = Math.sin(this.direction * Math.PI / 180) * -2;
-					} else if (attackEnd == 1) {
-						this.vX = Math.cos(this.direction * Math.PI / 180) * -3;
-						this.vY = Math.sin(this.direction * Math.PI / 180) * -3;
-					} else {
-						this.vX = Math.cos(this.direction * Math.PI / 180) * 3;
-						this.vY = Math.sin(this.direction * Math.PI / 180) * 3;
-					}
+					this.vX = Math.cos(this.direction * Math.PI / 180) * 3;
+					this.vY = Math.sin(this.direction * Math.PI / 180) * 3;
 				}
 			} else if (this.action == CHARACTER_ACTION_NONE) {
 				this.isAction = false;
