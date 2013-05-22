@@ -4,6 +4,7 @@ import static playn.core.PlayN.graphics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -245,6 +246,33 @@ public class ARPGUtils {
 		}
 		obj.px = obj.x;
 		obj.py = obj.y;
+	}
+
+	public static void checkDropItem(ARPGContext context,
+			BaseCharacter character) {
+		for (Iterator<BaseItem> it = context.droppedItems.iterator(); it
+				.hasNext();) {
+			BaseItem item = it.next();
+			float deltaX = item.x - character.x;
+			float deltaY = item.y - character.y;
+			float collisionRange = character.radius / 2;
+			float distance = (float) Math.sqrt(Math.pow(deltaX, 2)
+					+ Math.pow(deltaY, 2));
+			if (distance < collisionRange) {
+				item.onPickup(character);
+				it.remove();
+				graphics().rootLayer().remove(item.getLayer());
+			}
+		}
+	}
+
+	public static void dropItem(ARPGContext context, BaseCharacter character,
+			BaseItem item) throws Exception {
+		BaseItem clone = (BaseItem) (item.clone());
+		clone.x = character.x;
+		clone.y = character.y;
+		graphics().rootLayer().add(clone.getLayer());
+		context.droppedItems.add(clone);
 	}
 
 	public static void warpToRandomPoint(BaseCharacter character,

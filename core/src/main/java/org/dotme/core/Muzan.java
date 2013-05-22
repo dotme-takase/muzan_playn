@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.dotme.arpg.ARPGContext;
 import org.dotme.arpg.ARPGUtils;
 import org.dotme.arpg.BaseCharacter;
+import org.dotme.arpg.BaseItem;
 import org.dotme.arpg.EnemyCharacter;
 import org.dotme.arpg.PlayerCharacter;
 import org.dotme.sprite.SpriteAnimation;
@@ -60,6 +61,12 @@ public class Muzan implements Game {
 				it.remove();
 			}
 		}
+
+		for (Iterator<BaseItem> it = arpgContext.droppedItems.iterator(); it
+				.hasNext();) {
+			BaseItem item = it.next();
+			item.paintInView(alpha, arpgContext.viewPoint);
+		}
 	}
 
 	@Override
@@ -77,7 +84,8 @@ public class Muzan implements Game {
 			} else if (character instanceof PlayerCharacter) {
 				((PlayerCharacter) character).inputAction(arpgContext.input);
 			}
-			character.updateFrame(arpgContext.characters);
+			character.updateFrame(arpgContext);
+			ARPGUtils.checkDropItem(arpgContext, character);
 		}
 	}
 

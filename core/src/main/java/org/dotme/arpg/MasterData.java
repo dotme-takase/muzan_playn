@@ -32,11 +32,20 @@ public class MasterData {
 			"img/shields.png");
 	public static final Image IMAGE_SWORDS = assets()
 			.getImage("img/swords.png");
+	public static final Image IMAGE_ITEMS = assets().getImage("img/items.png");
+
+	public static final int IMAGE_SHIELDS_HEIGHT = 32;
+	public static final int IMAGE_SHIELDS_WIDTH = 32;
+	public static final int IMAGE_SWORDS_HEIGHT = 64;
+	public static final int IMAGE_SWORDS_WIDTH = 32;
+	public static final int IMAGE_ITEMS_HEIGHT = 32;
+	public static final int IMAGE_ITEMS_WIDTH = 32;
 
 	public static final Map<String, BaseItem> itemData = new HashMap<String, BaseItem>() {
 		private static final long serialVersionUID = 1L;
 		{
-			put("shortSword", new BaseItem() {
+			put("shortSword", new BaseItem(IMAGE_SWORDS, IMAGE_SWORDS_WIDTH,
+					IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(0);
 					setType(BaseItem.TYPE_SWORD);
@@ -45,7 +54,8 @@ public class MasterData {
 					setSpeed(1);
 				}
 			});
-			put("longSword", new BaseItem() {
+			put("longSword", new BaseItem(IMAGE_SWORDS, IMAGE_SWORDS_WIDTH,
+					IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(1);
 					setType(BaseItem.TYPE_SWORD);
@@ -54,7 +64,8 @@ public class MasterData {
 					setSpeed(0);
 				}
 			});
-			put("fasterShortSword", new BaseItem() {
+			put("fasterShortSword", new BaseItem(IMAGE_SWORDS,
+					IMAGE_SWORDS_WIDTH, IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(2);
 					setType(BaseItem.TYPE_SWORD);
@@ -63,7 +74,8 @@ public class MasterData {
 					setSpeed(2);
 				}
 			});
-			put("handAxe", new BaseItem() {
+			put("handAxe", new BaseItem(IMAGE_SWORDS, IMAGE_SWORDS_WIDTH,
+					IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(3);
 					setType(BaseItem.TYPE_SWORD);
@@ -72,7 +84,8 @@ public class MasterData {
 					setSpeed(-2);
 				}
 			});
-			put("katana", new BaseItem() {
+			put("katana", new BaseItem(IMAGE_SWORDS, IMAGE_SWORDS_WIDTH,
+					IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(4);
 					setType(BaseItem.TYPE_SWORD);
@@ -81,7 +94,8 @@ public class MasterData {
 					setSpeed(1);
 				}
 			});
-			put("ryuyotou", new BaseItem() {
+			put("ryuyotou", new BaseItem(IMAGE_SWORDS, IMAGE_SWORDS_WIDTH,
+					IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(5);
 					setType(BaseItem.TYPE_SWORD);
@@ -90,7 +104,8 @@ public class MasterData {
 					setSpeed(-1);
 				}
 			});
-			put("broadSword", new BaseItem() {
+			put("broadSword", new BaseItem(IMAGE_SWORDS, IMAGE_SWORDS_WIDTH,
+					IMAGE_SWORDS_HEIGHT) {
 				{
 					setSpriteFrame(6);
 					setType(BaseItem.TYPE_SWORD);
@@ -99,7 +114,8 @@ public class MasterData {
 					setSpeed(0);
 				}
 			});
-			put("woodenShield", new BaseItem() {
+			put("woodenShield", new BaseItem(IMAGE_SHIELDS,
+					IMAGE_SHIELDS_WIDTH, IMAGE_SHIELDS_HEIGHT) {
 				{
 					setSpriteFrame(0);
 					setType(BaseItem.TYPE_SHIELD);
@@ -107,7 +123,8 @@ public class MasterData {
 					setBasePoint(4);
 				}
 			});
-			put("bronzeShield", new BaseItem() {
+			put("bronzeShield", new BaseItem(IMAGE_SHIELDS,
+					IMAGE_SHIELDS_WIDTH, IMAGE_SHIELDS_HEIGHT) {
 				{
 					setSpriteFrame(1);
 					setType(BaseItem.TYPE_SHIELD);
@@ -115,7 +132,8 @@ public class MasterData {
 					setBasePoint(5);
 				}
 			});
-			put("ironShield", new BaseItem() {
+			put("ironShield", new BaseItem(IMAGE_SHIELDS, IMAGE_SHIELDS_WIDTH,
+					IMAGE_SHIELDS_HEIGHT) {
 				{
 					setSpriteFrame(2);
 					setType(BaseItem.TYPE_SHIELD);
@@ -123,7 +141,8 @@ public class MasterData {
 					setBasePoint(6);
 				}
 			});
-			put("blueShield", new BaseItem() {
+			put("blueShield", new BaseItem(IMAGE_SHIELDS, IMAGE_SHIELDS_WIDTH,
+					IMAGE_SHIELDS_HEIGHT) {
 				{
 					setSpriteFrame(3);
 					setType(BaseItem.TYPE_SHIELD);
@@ -131,7 +150,8 @@ public class MasterData {
 					setBasePoint(12);
 				}
 			});
-			put("redShield", new BaseItem() {
+			put("redShield", new BaseItem(IMAGE_SHIELDS, IMAGE_SHIELDS_WIDTH,
+					IMAGE_SHIELDS_HEIGHT) {
 				{
 					setSpriteFrame(4);
 					setType(BaseItem.TYPE_SHIELD);
@@ -139,7 +159,8 @@ public class MasterData {
 					setBasePoint(16);
 				}
 			});
-			put("aidBox", new BaseItem() {
+			put("aidBox", new BaseItem(IMAGE_ITEMS, IMAGE_ITEMS_WIDTH,
+					IMAGE_ITEMS_HEIGHT) {
 				{
 					setSpriteFrame(0);
 					setType(BaseItem.TYPE_POTION);
@@ -157,6 +178,12 @@ public class MasterData {
 					itemData.get("woodenShield")) {
 				{
 					this.speed = 5;
+					this.dropRateMap = new HashMap<BaseItem, Integer>() {
+						private static final long serialVersionUID = -3178259687079263841L;
+						{
+							put(itemData.get("aidBox"), 1);
+						}
+					};
 				}
 			});
 		}

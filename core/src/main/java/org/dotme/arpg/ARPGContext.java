@@ -25,6 +25,7 @@ public class ARPGContext {
 	public Map<String, Vector2> characterPreviousPoints = null;
 	public InputStatus input = null;
 	public List<SpriteAnimation> effects = null;
+	public List<BaseItem> droppedItems = null;
 
 	private ARPGContext() {
 	}
@@ -74,6 +75,7 @@ public class ARPGContext {
 		}
 
 		effects = new ArrayList<SpriteAnimation>();
+		droppedItems = new ArrayList<BaseItem>();
 	}
 
 }

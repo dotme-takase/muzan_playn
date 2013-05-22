@@ -3,6 +3,7 @@ package org.dotme.arpg;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.dotme.core.math.Vector2;
@@ -98,7 +99,6 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 			this.spriteCon.getLeftArmSprite().setFrame(item.getSpriteFrame());
 		} catch (CloneNotSupportedException e) {
 		}
-		// ToDo play sound
 	}
 
 	public void equipRight(BaseItem item) {
@@ -108,7 +108,6 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 			this.spriteCon.getRightArmSprite().setFrame(item.getSpriteFrame());
 		} catch (CloneNotSupportedException e) {
 		}
-		// ToDo play sound
 	}
 
 	public void ejectLeft() {
@@ -129,18 +128,34 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 		this.dropRateMap.put(item, rate);
 	}
 
-	public void die() {
+	public void die(ARPGContext context) {
 		this.HP = 0;
 		this.action = CHARACTER_ACTION_DEAD;
 		if (Math.floor(Math.random() * 100) < 80) {
-			// ToDo
+			int rateSum = 0;
+			Map<Integer, BaseItem> rateMap = new HashMap<Integer, BaseItem>();
+			for (Entry<BaseItem, Integer> e : dropRateMap.entrySet()) {
+				rateSum += e.getValue();
+				rateMap.put(Integer.valueOf(rateSum), e.getKey());
+			}
+			int dice = (int) Math.floor(Math.random() * rateSum);
+			for (Entry<Integer, BaseItem> e2 : rateMap.entrySet()) {
+				if (dice < e2.getKey()) {
+					try {
+						ARPGUtils.dropItem(context, this, e2.getValue());
+					} catch (Exception e1) {
+					}
+					break;
+				}
+			}
 		}
 	}
 
-	public void updateFrame(List<BaseCharacter> characters) {
+	public void updateFrame(ARPGContext context) {
+		List<BaseCharacter> characters = context.characters;
 		this.spriteCon.setAlpha(1.0f);
 		if (this.HP <= 0) {
-			this.die();
+			this.die(context);
 		}
 		if (this.isWalking) {
 			if (this.spriteCon.isPaused()) {
@@ -275,10 +290,6 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 				(float) (Math.PI * (this.direction) / 180.0f));
 
 		this.clientTime++;
-	}
-
-	public void checkDropItem() {
-		// ToDo
 	}
 
 	public SpriteContainer getSpriteContainer() {
