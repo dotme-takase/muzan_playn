@@ -85,8 +85,8 @@ public class Muzan implements Game {
 				((PlayerCharacter) character).inputAction(arpgContext.input);
 			}
 			character.updateFrame(arpgContext);
-			ARPGUtils.checkDropItem(arpgContext, character);
 		}
+		ARPGUtils.checkDropItem(arpgContext, arpgContext.player);
 	}
 
 	@Override

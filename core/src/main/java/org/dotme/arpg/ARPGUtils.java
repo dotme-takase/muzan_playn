@@ -1,7 +1,5 @@
 package org.dotme.arpg;
 
-import static playn.core.PlayN.graphics;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -261,7 +259,7 @@ public class ARPGUtils {
 			if (distance < collisionRange) {
 				item.onPickup(character);
 				it.remove();
-				graphics().rootLayer().remove(item.getLayer());
+				item.getLayer().destroy();
 			}
 		}
 	}
@@ -271,7 +269,7 @@ public class ARPGUtils {
 		BaseItem clone = (BaseItem) (item.clone());
 		clone.x = character.x;
 		clone.y = character.y;
-		graphics().rootLayer().add(clone.getLayer());
+		context.itemLayer.add(clone.getLayer());
 		context.droppedItems.add(clone);
 	}
 
@@ -309,7 +307,7 @@ public class ARPGUtils {
 			animation.gotoAndPlay(animationName, false);
 			ARPGContext context = ARPGContext.getInstance();
 			context.effects.add(animation);
-			graphics().rootLayer().add(animation.getLayer());
+			context.characterLayer.add(animation.getLayer());
 		} catch (Exception e) {
 		}
 	}

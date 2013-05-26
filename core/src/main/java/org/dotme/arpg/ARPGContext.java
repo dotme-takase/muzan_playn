@@ -14,6 +14,9 @@ import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 import org.dotme.sprite.arpg.SpriteConstants;
 
+import playn.core.GroupLayer;
+import playn.core.GroupLayer.Clipped;
+
 public class ARPGContext {
 	private static final ARPGContext instance = new ARPGContext();
 
@@ -27,6 +30,10 @@ public class ARPGContext {
 	public List<SpriteAnimation> effects = null;
 	public List<BaseItem> droppedItems = null;
 
+	public GroupLayer stageLayer;
+	public GroupLayer itemLayer;
+	public GroupLayer characterLayer;
+
 	private ARPGContext() {
 	}
 
@@ -35,6 +42,16 @@ public class ARPGContext {
 	}
 
 	public void init() {
+		this.stageLayer = graphics().createGroupLayer(graphics().width(),
+				graphics().height());
+		graphics().rootLayer().add(this.stageLayer);
+		this.itemLayer = graphics().createGroupLayer(graphics().width(),
+				graphics().height());
+		graphics().rootLayer().add(this.itemLayer);
+		this.characterLayer = graphics().createGroupLayer(graphics().width(),
+				graphics().height());
+		graphics().rootLayer().add(this.characterLayer);
+
 		mapChipSprite = new MapChipSprite(assets().getImage("img/tiles1.png"),
 				SpriteConstants.TILE_SIZE_DEFAULT,
 				SpriteConstants.TILE_SIZE_DEFAULT, graphics().width(),
@@ -45,7 +62,7 @@ public class ARPGContext {
 
 		mapChipSprite.setOffset(viewPoint);
 		mapChipSprite.setMap(mapChips);
-		graphics().rootLayer().add(mapChipSprite.getLayer());
+		this.stageLayer.add(mapChipSprite.getLayer());
 
 		CharacterSpriteContainer playerCon = new CharacterSpriteContainer(
 				"player", "img/player.png");
@@ -68,7 +85,7 @@ public class ARPGContext {
 						characterPreviousPoints);
 			}
 			for (BaseCharacter character : this.characters) {
-				graphics().rootLayer().add(
+				this.characterLayer.add(
 						character.getSpriteContainer().getLayer());
 			}
 		} catch (CloneNotSupportedException e) {
