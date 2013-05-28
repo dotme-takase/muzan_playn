@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.dotme.core.math.Vector2;
 import org.dotme.sprite.MapChip;
 import org.dotme.sprite.MapChipSprite;
 import org.dotme.sprite.SpriteAnimation;
+import org.dotme.sprite.TextSprite;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 import org.dotme.sprite.arpg.SpriteConstants;
 
@@ -33,6 +36,9 @@ public class ARPGContext {
 	public GroupLayer stageLayer;
 	public GroupLayer itemLayer;
 	public GroupLayer characterLayer;
+	public GroupLayer uiLayer;
+
+	public TextSprite statusSprite;
 
 	private ARPGContext() {
 	}
@@ -51,6 +57,9 @@ public class ARPGContext {
 		this.characterLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
 		graphics().rootLayer().add(this.characterLayer);
+		this.uiLayer = graphics().createGroupLayer(graphics().width(),
+				graphics().height());
+		graphics().rootLayer().add(this.uiLayer);
 
 		mapChipSprite = new MapChipSprite(assets().getImage("img/tiles1.png"),
 				SpriteConstants.TILE_SIZE_DEFAULT,
@@ -85,14 +94,18 @@ public class ARPGContext {
 						characterPreviousPoints);
 			}
 			for (BaseCharacter character : this.characters) {
-				this.characterLayer.add(
-						character.getSpriteContainer().getLayer());
+				this.characterLayer.add(character.getSpriteContainer()
+						.getLayer());
 			}
 		} catch (CloneNotSupportedException e) {
 		}
 
 		effects = new ArrayList<SpriteAnimation>();
 		droppedItems = new ArrayList<BaseItem>();
-	}
 
+		statusSprite = new TextSprite(assets().getImage(MasterData.fontSource),
+				MasterData.fontHeight, MasterData.fontMap, 0, 0, graphics()
+						.width(), MasterData.fontHeight * 4);
+		uiLayer.add(statusSprite.getLayer());
+	}
 }

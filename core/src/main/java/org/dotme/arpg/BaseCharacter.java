@@ -20,6 +20,10 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 	public static final int CHARACTER_ACTION_DAMAGE = 5;
 	public static final int CHARACTER_ACTION_DEAD = 6;
 
+	public int HP;
+	public int MHP;
+	public int teamNumber;
+
 	private CharacterSpriteContainer spriteCon;
 	BaseItem rightArm;
 	BaseItem leftArm;
@@ -36,9 +40,6 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 	int attackFrame;
 	int defenceFrame;
 	boolean isWalking;
-	int HP;
-	int MHP;
-	int teamNumber;
 	int clientTime;
 	Map<BaseItem, Integer> dropRateMap;
 	boolean isPlayer;

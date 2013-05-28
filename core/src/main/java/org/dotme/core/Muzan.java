@@ -67,6 +67,7 @@ public class Muzan implements Game {
 			BaseItem item = it.next();
 			item.paintInView(alpha, arpgContext.viewPoint);
 		}
+		arpgContext.statusSprite.paint(alpha);
 	}
 
 	@Override
@@ -87,6 +88,8 @@ public class Muzan implements Game {
 			character.updateFrame(arpgContext);
 		}
 		ARPGUtils.checkDropItem(arpgContext, arpgContext.player);
+		arpgContext.statusSprite.setText("HP " + arpgContext.player.HP + "/"
+				+ arpgContext.player.MHP);
 	}
 
 	@Override
