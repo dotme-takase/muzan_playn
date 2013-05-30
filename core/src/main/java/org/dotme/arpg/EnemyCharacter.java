@@ -274,7 +274,6 @@ public class EnemyCharacter extends BaseCharacter {
 						this.direction = (int) (theta * 180 / Math.PI);
 					}
 				}
-
 				if (this.mode != ATTACK_TO_TARGET) {
 					this.isWalking = true;
 					if ((this.target == null) || (Math.random() * 100 > 80)) {
@@ -309,6 +308,12 @@ public class EnemyCharacter extends BaseCharacter {
 			} else if (this.mode == ATTACK_TO_TARGET) {
 				if (this.target.HP <= 0) {
 					this.mode = RANDOM_WALK;
+				} else if ((this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE)
+						|| (this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE_MOTION)
+						|| (this.action == BaseCharacter.CHARACTER_ACTION_ATTACK)) {
+					if (this.defenceFrame <= 0) {
+						this.action = BaseCharacter.CHARACTER_ACTION_ATTACK;
+					}
 				} else if (distance < range + this.rightArm.getRange()) {
 					double dice = Math.random() * 4;
 					if (!this.isAction) {
@@ -322,14 +327,7 @@ public class EnemyCharacter extends BaseCharacter {
 							this.action = BaseCharacter.CHARACTER_ACTION_NONE;
 							this.isAction = false;
 						}
-						if ((this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE)
-								|| (this.action == BaseCharacter.CHARACTER_ACTION_DEFENCE_MOTION)) {
-							if (this.defenceFrame <= 0) {
-								this.action = BaseCharacter.CHARACTER_ACTION_ATTACK;
-							}
-						}
 					}
-
 					if (this.action == BaseCharacter.CHARACTER_ACTION_ATTACK) {
 					}
 				} else {

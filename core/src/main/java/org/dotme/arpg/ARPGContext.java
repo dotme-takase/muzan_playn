@@ -37,7 +37,7 @@ public class ARPGContext {
 
 	public TextSprite statusSprite;
 
-	public int floor = 1;
+	public int floor = 0;
 	public int mapType = -1;
 
 	private ARPGContext() {
@@ -69,12 +69,10 @@ public class ARPGContext {
 		this.stageLayer.add(mapChipSprite.getLayer());
 		mapGenerator = new MapGenerator();
 
-		CharacterSpriteContainer playerCon = new CharacterSpriteContainer(
-				"player", "img/player.png");
-
-		player = new PlayerCharacter(playerCon,
-				MasterData.itemData.get("shortSword"),
+		player = new PlayerCharacter(new CharacterSpriteContainer("player",
+				"img/player.png"), MasterData.itemData.get("shortSword"),
 				MasterData.itemData.get("woodenShield"));
+		this.characterLayer.add(player.getSpriteContainer().getLayer());
 		input = new InputStatus();
 
 		statusSprite = new TextSprite(assets().getImage(MasterData.fontSource),
@@ -82,7 +80,7 @@ public class ARPGContext {
 						.width(), MasterData.fontHeight);
 		uiLayer.add(statusSprite.getLayer());
 
-		initFloor(3, 3, true);
+		initFloor(3, 3, false);
 	}
 
 	private void destroyLayers() {
@@ -110,6 +108,23 @@ public class ARPGContext {
 
 	public void initFloor(int x, int y, boolean reset) {
 		destroyLayers();
+		if (!reset) {
+			this.floor++;
+		} else {
+			if (!player.getSpriteContainer().getLayer().destroyed()) {
+				player.getSpriteContainer().getLayer().destroy();
+			}
+			player.setSpriteCon(new CharacterSpriteContainer("player",
+					"img/player.png"));
+			player.ejectLeft();
+			player.ejectRight();
+			player.equipLeft(MasterData.itemData.get("woodenShield"));
+			player.equipRight(MasterData.itemData.get("shortSword"));
+			player.HP = player.MHP;
+			player.isAction = player.isWalking = false;
+			player.action = BaseCharacter.CHARACTER_ACTION_NONE;
+			this.floor = 1;
+		}
 		MapChip[][] mapChips = mapGenerator.generate(x, y);
 		mapChipSprite.setMap(mapChips);
 		characters = new ArrayList<BaseCharacter>();
@@ -125,15 +140,14 @@ public class ARPGContext {
 						characterPreviousPoints);
 			}
 			for (BaseCharacter character : this.characters) {
-				this.characterLayer.add(character.getSpriteContainer()
-						.getLayer());
+				if (reset || !character.stateId.equals(player.stateId)) {
+					this.characterLayer.add(character.getSpriteContainer()
+							.getLayer());
+				}
 			}
 		} catch (CloneNotSupportedException e) {
 		}
 		effects = new ArrayList<SpriteAnimation>();
 		droppedItems = new ArrayList<BaseItem>();
-		if (!reset) {
-			this.floor++;
-		}
 	}
 }

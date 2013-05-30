@@ -100,7 +100,7 @@ public class ARPGUtils {
 						&& obj.isAction
 						&& !obj.isWalking
 						&& (obj.action == BaseCharacter.CHARACTER_ACTION_ATTACK)
-						&& (obj.attackFrame >= 2)) {
+						&& (obj.attackFrame > 2)) {
 
 					int weaponRange = 0;
 					int weaponPoint = 0;
@@ -328,7 +328,9 @@ public class ARPGUtils {
 		try {
 			Vector2 mapPoint = getMapPoint(context.player);
 			MapChip mapChip = context.mapChipSprite.getMap()[(int) mapPoint.y][(int) mapPoint.x];
-			if (mapChip.getType() == MapChip.MAPCHIP_TYPE_DOWNSTAIR) {
+			if (context.player.HP <= 0) {
+				context.initFloor(3, 3, true);
+			} else if (mapChip.getType() == MapChip.MAPCHIP_TYPE_DOWNSTAIR) {
 				context.initFloor(3, 3, false);
 			}
 		} finally {
