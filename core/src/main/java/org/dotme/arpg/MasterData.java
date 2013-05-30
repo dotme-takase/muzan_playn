@@ -165,6 +165,7 @@ public class MasterData {
 				{
 					setSpriteFrame(0);
 					setType(BaseItem.TYPE_POTION);
+					setBasePoint(20);
 				}
 			});
 		}

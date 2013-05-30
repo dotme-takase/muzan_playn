@@ -88,8 +88,7 @@ public class Muzan implements Game {
 			character.updateFrame(arpgContext);
 		}
 		ARPGUtils.checkDropItem(arpgContext, arpgContext.player);
-		arpgContext.statusSprite.setText("HP " + arpgContext.player.HP + "/"
-				+ arpgContext.player.MHP);
+		ARPGUtils.updateContext(arpgContext);
 	}
 
 	@Override

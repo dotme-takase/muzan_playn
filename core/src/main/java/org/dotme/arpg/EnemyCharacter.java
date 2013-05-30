@@ -309,7 +309,7 @@ public class EnemyCharacter extends BaseCharacter {
 			} else if (this.mode == ATTACK_TO_TARGET) {
 				if (this.target.HP <= 0) {
 					this.mode = RANDOM_WALK;
-				} else if (distance < range + this.rightArm.getRange() * 0.75) {
+				} else if (distance < range + this.rightArm.getRange()) {
 					double dice = Math.random() * 4;
 					if (!this.isAction) {
 						this.isWalking = false;

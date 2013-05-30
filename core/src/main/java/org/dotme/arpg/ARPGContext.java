@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.dotme.core.math.Vector2;
 import org.dotme.sprite.MapChip;
 import org.dotme.sprite.MapChipSprite;
@@ -18,7 +16,6 @@ import org.dotme.sprite.arpg.CharacterSpriteContainer;
 import org.dotme.sprite.arpg.SpriteConstants;
 
 import playn.core.GroupLayer;
-import playn.core.GroupLayer.Clipped;
 
 public class ARPGContext {
 	private static final ARPGContext instance = new ARPGContext();
@@ -40,6 +37,9 @@ public class ARPGContext {
 
 	public TextSprite statusSprite;
 
+	public int floor = 1;
+	public int mapType = -1;
+
 	private ARPGContext() {
 	}
 
@@ -60,18 +60,14 @@ public class ARPGContext {
 		this.uiLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
 		graphics().rootLayer().add(this.uiLayer);
-
+		viewPoint = new Vector2(0, 0);
 		mapChipSprite = new MapChipSprite(assets().getImage("img/tiles1.png"),
 				SpriteConstants.TILE_SIZE_DEFAULT,
 				SpriteConstants.TILE_SIZE_DEFAULT, graphics().width(),
 				graphics().height());
-		mapGenerator = new MapGenerator();
-		MapChip[][] mapChips = mapGenerator.generate(4, 3);
-		viewPoint = new Vector2(0, 0);
-
 		mapChipSprite.setOffset(viewPoint);
-		mapChipSprite.setMap(mapChips);
 		this.stageLayer.add(mapChipSprite.getLayer());
+		mapGenerator = new MapGenerator();
 
 		CharacterSpriteContainer playerCon = new CharacterSpriteContainer(
 				"player", "img/player.png");
@@ -81,6 +77,41 @@ public class ARPGContext {
 				MasterData.itemData.get("woodenShield"));
 		input = new InputStatus();
 
+		statusSprite = new TextSprite(assets().getImage(MasterData.fontSource),
+				MasterData.fontHeight, MasterData.fontMap, 4, 4, graphics()
+						.width(), MasterData.fontHeight);
+		uiLayer.add(statusSprite.getLayer());
+
+		initFloor(3, 3, true);
+	}
+
+	private void destroyLayers() {
+		try {
+			if (characters != null) {
+				for (BaseCharacter o : characters) {
+					if (!o.stateId.equals(player.stateId)) {
+						o.getSpriteContainer().getLayer().destroy();
+					}
+				}
+			}
+			if (effects != null) {
+				for (SpriteAnimation o : effects) {
+					o.getLayer().destroy();
+				}
+			}
+			if (droppedItems != null) {
+				for (BaseItem o : droppedItems) {
+					o.getLayer().destroy();
+				}
+			}
+		} finally {
+		}
+	}
+
+	public void initFloor(int x, int y, boolean reset) {
+		destroyLayers();
+		MapChip[][] mapChips = mapGenerator.generate(x, y);
+		mapChipSprite.setMap(mapChips);
 		characters = new ArrayList<BaseCharacter>();
 		try {
 			characters.add(player);
@@ -99,13 +130,10 @@ public class ARPGContext {
 			}
 		} catch (CloneNotSupportedException e) {
 		}
-
 		effects = new ArrayList<SpriteAnimation>();
 		droppedItems = new ArrayList<BaseItem>();
-
-		statusSprite = new TextSprite(assets().getImage(MasterData.fontSource),
-				MasterData.fontHeight, MasterData.fontMap, 0, 0, graphics()
-						.width(), MasterData.fontHeight * 4);
-		uiLayer.add(statusSprite.getLayer());
+		if (!reset) {
+			this.floor++;
+		}
 	}
 }

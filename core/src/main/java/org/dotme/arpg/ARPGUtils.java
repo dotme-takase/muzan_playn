@@ -253,7 +253,7 @@ public class ARPGUtils {
 			BaseItem item = it.next();
 			float deltaX = item.x - character.x;
 			float deltaY = item.y - character.y;
-			float collisionRange = character.radius / 2;
+			float collisionRange = character.radius;
 			float distance = (float) Math.sqrt(Math.pow(deltaX, 2)
 					+ Math.pow(deltaY, 2));
 			if (distance < collisionRange) {
@@ -321,6 +321,19 @@ public class ARPGUtils {
 					break;
 				}
 			}
+		}
+	}
+
+	public static void updateContext(ARPGContext context) {
+		try {
+			Vector2 mapPoint = getMapPoint(context.player);
+			MapChip mapChip = context.mapChipSprite.getMap()[(int) mapPoint.y][(int) mapPoint.x];
+			if (mapChip.getType() == MapChip.MAPCHIP_TYPE_DOWNSTAIR) {
+				context.initFloor(3, 3, false);
+			}
+		} finally {
+			context.statusSprite.setText("B" + context.floor + "F  HP "
+					+ context.player.HP + "/" + context.player.MHP);
 		}
 	}
 }

@@ -43,7 +43,7 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 	int clientTime;
 	Map<BaseItem, Integer> dropRateMap;
 	boolean isPlayer;
-	String stateId;
+	public String stateId;
 
 	public BaseCharacter(CharacterSpriteContainer spriteCon, BaseItem rightArm,
 			BaseItem leftArm) {
