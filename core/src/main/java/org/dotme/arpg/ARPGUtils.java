@@ -1,10 +1,14 @@
 package org.dotme.arpg;
 
+import static playn.core.PlayN.graphics;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.dotme.core.math.Vector2;
 import org.dotme.sprite.MapChip;
@@ -12,7 +16,13 @@ import org.dotme.sprite.MapChipSprite;
 import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.arpg.SpriteConstants;
 
+import playn.core.CanvasImage;
+import playn.core.Color;
+import playn.core.Font;
+import playn.core.ImageLayer;
 import playn.core.Sound;
+import playn.core.TextFormat;
+import playn.core.TextLayout;
 
 public class ARPGUtils {
 	public static Vector2 getRandomPoint(MapChip[][] map) {
@@ -337,5 +347,50 @@ public class ARPGUtils {
 			context.statusSprite.setText("B" + context.floor + "F  HP "
 					+ context.player.HP + "/" + context.player.MHP);
 		}
+	}
+
+	private static ImageLayer createMessageText(String text, int fontSize,
+			Integer fontColor) {
+		Font font = graphics().createFont("Helvetica", Font.Style.PLAIN,
+				fontSize);
+		TextLayout layout = graphics().layoutText(text,
+				new TextFormat().withFont(font));
+		ImageLayer textLayer = createTextLayer(layout, fontColor);
+		return textLayer;
+	}
+
+	private static ImageLayer createTextLayer(TextLayout layout,
+			Integer fontColor) {
+		float width = layout.width() + 64;
+		float offX = (width - layout.width()) / 2.0f;
+		float height = layout.height() + 8;
+		float offY = (height - layout.height()) / 2.0f;
+		CanvasImage image = graphics().createImage((int) Math.ceil(width),
+				(int) Math.ceil(height));
+		image.canvas().clear();
+		if (fontColor != null)
+			image.canvas().setFillColor(fontColor);
+		image.canvas().fillText(layout, offX, offY);
+
+		return graphics().createImageLayer(image);
+	}
+
+	public static Map<String, ImageLayer> createMenuMap(ResourceBundle messages) {
+		Map<String, ImageLayer> result = new HashMap<String, ImageLayer>();
+		List<String> list = new ArrayList<String>();
+		list.add(ARPGContext.MAIN_MENU_START_GAME);
+		list.add(ARPGContext.MAIN_MENU_RANKING);
+		Collections.reverse(list);
+		int offY = (graphics().height());
+		for (String text : list) {
+			ImageLayer layer = createMessageText(messages.getString(text), 24,
+					Color.rgb(255, 255, 255));
+			offY -= layer.height() + 12;
+			layer.setTx((graphics().width() - layer.width()) / 2);
+			layer.setTy(offY);
+			result.put(text, layer);
+		}
+		Collections.reverse(list);
+		return result;
 	}
 }

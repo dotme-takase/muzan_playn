@@ -15,9 +15,18 @@ import org.dotme.sprite.TextSprite;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 import org.dotme.sprite.arpg.SpriteConstants;
 
+import playn.core.Canvas;
+import playn.core.CanvasImage;
 import playn.core.GroupLayer;
+import playn.core.ImageLayer;
 
 public class ARPGContext {
+	public static final String MAIN_MENU_START_GAME = "menuStartGame";
+	public static final String MAIN_MENU_RANKING = "menuRanking";
+	public static final int MODE_MAIN = 0;
+	public static final int MODE_MENU = 1;
+	public static final int MODE_RANKING = 2;
+
 	private static final ARPGContext instance = new ARPGContext();
 
 	public MapGenerator mapGenerator;
@@ -35,8 +44,12 @@ public class ARPGContext {
 	public GroupLayer characterLayer;
 	public GroupLayer uiLayer;
 
+	public GroupLayer menuLayer;
+	public ImageLayer menuImageLayer;
+
 	public TextSprite statusSprite;
 
+	public int mode = MODE_MENU;
 	public int floor = 0;
 	public int mapType = -1;
 
@@ -60,6 +73,14 @@ public class ARPGContext {
 		this.uiLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
 		graphics().rootLayer().add(this.uiLayer);
+		this.menuLayer = graphics().createGroupLayer(graphics().width(),
+				graphics().height());
+		CanvasImage image = graphics().createImage(graphics().width(),
+				graphics().height());
+		this.menuImageLayer = graphics().createImageLayer(image);
+		this.menuLayer.add(menuImageLayer);
+		graphics().rootLayer().add(this.menuLayer);
+
 		viewPoint = new Vector2(0, 0);
 		mapChipSprite = new MapChipSprite(assets().getImage("img/tiles1.png"),
 				SpriteConstants.TILE_SIZE_DEFAULT,
@@ -81,6 +102,10 @@ public class ARPGContext {
 		uiLayer.add(statusSprite.getLayer());
 
 		initFloor(3, 3, false);
+	}
+
+	public Canvas getMenuCanvas() {
+		return ((CanvasImage) this.menuImageLayer.image()).canvas();
 	}
 
 	private void destroyLayers() {

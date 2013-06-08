@@ -279,7 +279,7 @@ public class MasterData {
 			put(77, new Rectangle(282, 132, 27, 36));
 			put(78, new Rectangle(311, 132, 25, 36));
 			put(79, new Rectangle(337, 132, 27, 36));
-			put(80, new Rectangle(364, 132, 23, 36));
+			put(80, new Rectangle(364, 132, 22, 36));
 			put(81, new Rectangle(386, 132, 27, 36));
 			put(82, new Rectangle(413, 132, 24, 36));
 			put(83, new Rectangle(438, 132, 21, 36));
