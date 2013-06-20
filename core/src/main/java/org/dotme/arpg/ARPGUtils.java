@@ -354,6 +354,7 @@ public class ARPGUtils {
 				context.initFloor(3, 3, true);
 				createRankingScreen(context, messages, ranking);
 				context.mode = ARPGContext.MODE_RANKING;
+				context.autoMapLayer.setVisible(false);
 				context.menuLayer.setVisible(true);
 				context.rankingLayer.setVisible(true);
 				((SurfaceLayer) context.statusSprite.getLayer()).surface()
@@ -361,6 +362,7 @@ public class ARPGUtils {
 			} else if (mapChip.getType() == MapChip.MAPCHIP_TYPE_DOWNSTAIR) {
 				context.initFloor(3, 3, false);
 				context.mode = ARPGContext.MODE_FLOOR_FADE;
+				context.autoMapLayer.setVisible(false);
 				context.floorLabelLayer = createMessageText(
 						MessageFormat.format(
 								messages.getString("textFloorLabel"),
@@ -376,6 +378,43 @@ public class ARPGUtils {
 		} finally {
 			context.statusSprite.setText("B" + context.floor + " "
 					+ context.player.HP + "/" + context.player.MHP);
+		}
+	}
+
+	public static void drawAutoMap(ARPGContext context) {
+		try {
+			Vector2 mapPoint = getMapPoint(context.player);
+			Canvas canvas = ((CanvasImage) context.autoMapImageLayer.image())
+					.canvas();
+			int size = MasterData.AUTOMAP_SIZE;
+			context.autoMapPlayerLayer.setTranslation(mapPoint.x * size,
+					mapPoint.y * size);
+
+			for (int y = (int) (mapPoint.y - 1); y <= mapPoint.y + 1; y++) {
+				if ((y > 0) && (y < context.autoMap.length)) {
+					for (int x = (int) (mapPoint.x - 1); x <= mapPoint.x + 1; x++) {
+						if ((x > 0) && (x < context.autoMap[y].length)) {
+							if (context.autoMap[y][x] == false) {
+								context.autoMap[y][x] = true;
+								MapChip chip = context.mapChipSprite.getMap()[y][x];
+								if (chip.getType() == MapChip.MAPCHIP_TYPE_DOWNSTAIR) {
+									canvas.setFillColor(Color
+											.rgb(192, 192, 256));
+									canvas.fillRect(x * size, y * size, size,
+											size);
+								} else if (chip.getType() == MapChip.MAPCHIP_TYPE_FLOOR) {
+									canvas.setFillColor(Color
+											.rgb(256, 256, 192));
+									canvas.fillRect(x * size, y * size, size,
+											size);
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

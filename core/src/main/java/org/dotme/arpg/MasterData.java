@@ -31,6 +31,7 @@ public class MasterData {
 
 	public static final String STRAGE_KEY_SAVE_DATA = "saveData";
 	public static final int RANKING_SIZE = 15;
+	public static final int AUTOMAP_SIZE = 4;
 
 	public static final Image IMAGE_SHIELDS = assets().getImage(
 			"img/shields.png");

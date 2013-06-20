@@ -17,6 +17,7 @@ import org.dotme.sprite.arpg.SpriteConstants;
 
 import playn.core.Canvas;
 import playn.core.CanvasImage;
+import playn.core.Color;
 import playn.core.GroupLayer;
 import playn.core.ImageLayer;
 
@@ -51,6 +52,11 @@ public class ARPGContext {
 	public ImageLayer uiImageLayer;
 	public ImageLayer floorLabelLayer;
 
+	public GroupLayer autoMapLayer;
+	public ImageLayer autoMapImageLayer;
+	public ImageLayer autoMapPlayerLayer;
+	public boolean[][] autoMap;
+
 	public GroupLayer menuLayer;
 	public ImageLayer menuImageLayer;
 
@@ -81,6 +87,27 @@ public class ARPGContext {
 		this.characterLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
 		graphics().rootLayer().add(this.characterLayer);
+
+		this.autoMapLayer = graphics().createGroupLayer(graphics().width() / 2,
+				graphics().height());
+		this.autoMapLayer.setTx(graphics().width() / 2);
+		this.autoMapImageLayer = graphics().createImageLayer(
+				graphics().createImage(graphics().width() / 2,
+						graphics().height()));
+		this.autoMapPlayerLayer = graphics().createImageLayer(
+				graphics().createImage(MasterData.AUTOMAP_SIZE,
+						MasterData.AUTOMAP_SIZE));
+		Canvas autoMapPlayerCanvas = ((CanvasImage) this.autoMapPlayerLayer
+				.image()).canvas();
+		autoMapPlayerCanvas.setFillColor(Color.rgb(0, 255, 0));
+		autoMapPlayerCanvas.fillRect(0, 0, MasterData.AUTOMAP_SIZE,
+				MasterData.AUTOMAP_SIZE);
+		this.autoMapLayer.add(autoMapImageLayer);
+		this.autoMapLayer.add(autoMapPlayerLayer);
+		graphics().rootLayer().add(this.autoMapLayer);
+		this.autoMapLayer.setAlpha(0.5f);
+		this.autoMapLayer.setVisible(false);
+
 		this.uiLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
 		this.uiImageLayer = graphics()
@@ -88,6 +115,7 @@ public class ARPGContext {
 						graphics().createImage(graphics().width(),
 								graphics().height()));
 		graphics().rootLayer().add(this.uiLayer);
+
 		this.menuLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
 		this.menuImageLayer = graphics()
@@ -177,6 +205,18 @@ public class ARPGContext {
 			this.floor = 1;
 		}
 		MapChip[][] mapChips = mapGenerator.generate(x, y);
+
+		int _y = mapChips.length;
+		int _x = mapChips[0].length;
+
+		autoMap = new boolean[_y][_x];
+		for (int aY = 0; aY < _y; aY++) {
+			for (int aX = 0; aX < _x; aX++) {
+				autoMap[aY][aX] = false;
+			}
+		}
+		((CanvasImage) this.autoMapImageLayer.image()).canvas().clear();
+
 		mapChipSprite.setMap(mapChips);
 		characters = new ArrayList<BaseCharacter>();
 		try {

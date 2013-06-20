@@ -84,6 +84,7 @@ public class Muzan implements Game {
 				item.paintInView(alpha, arpgContext.viewPoint);
 			}
 			arpgContext.statusSprite.paint(alpha);
+			ARPGUtils.drawAutoMap(arpgContext);
 		} else if (arpgContext.mode == ARPGContext.MODE_MENU) {
 			((SurfaceLayer) (arpgContext.mapChipSprite.getLayer())).surface()
 					.clear();
@@ -162,6 +163,7 @@ public class Muzan implements Game {
 					.equals(pointerListener.menuClicked)) {
 				arpgContext.menuLayer.setVisible(false);
 				arpgContext.mode = ARPGContext.MODE_MAIN;
+				arpgContext.autoMapLayer.setVisible(true);
 			} else if (ARPGContext.MAIN_MENU_RANKING
 					.equals(pointerListener.menuClicked)) {
 				ARPGUtils.createRankingScreen(arpgContext, messages, -1);
@@ -181,6 +183,7 @@ public class Muzan implements Game {
 			} else {
 				arpgContext.floorFadeCount = 0;
 				arpgContext.mode = ARPGContext.MODE_MAIN;
+				arpgContext.autoMapLayer.setVisible(true);
 				arpgContext.floorLabelLayer.destroy();
 			}
 		}
