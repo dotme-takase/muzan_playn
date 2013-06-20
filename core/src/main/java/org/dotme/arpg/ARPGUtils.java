@@ -2,6 +2,7 @@ package org.dotme.arpg;
 
 import static playn.core.PlayN.graphics;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,11 +17,16 @@ import org.dotme.sprite.MapChipSprite;
 import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.arpg.SpriteConstants;
 
+import playn.core.Canvas;
 import playn.core.CanvasImage;
 import playn.core.Color;
 import playn.core.Font;
 import playn.core.ImageLayer;
+import playn.core.Json;
+import playn.core.PlayN;
 import playn.core.Sound;
+import playn.core.Storage;
+import playn.core.SurfaceLayer;
 import playn.core.TextFormat;
 import playn.core.TextLayout;
 
@@ -135,8 +141,13 @@ public class ARPGUtils {
 							obj.isAction = true;
 							obj.action = BaseCharacter.CHARACTER_ACTION_PARRIED;
 							obj.parriedFrame = 1;
-							// ToDo
-							// other.leftArm.onUse(other, obj);
+							other.leftArm.setHitPoint(other.leftArm
+									.getHitPoint()
+									- (int) Math.ceil(weaponPoint
+											* (Math.random() * 0.20 + 1)));
+							if (other.leftArm.getHitPoint() <= 0) {
+								other.ejectLeft();
+							}
 						} else if (!other.isAction
 								|| (other.action != BaseCharacter.CHARACTER_ACTION_DAMAGE)) {
 							double kickBackRange = -1 * Math.random()
@@ -147,11 +158,10 @@ public class ARPGUtils {
 							other.action = BaseCharacter.CHARACTER_ACTION_DAMAGE;
 							other.HP -= Math.ceil(weaponPoint
 									* (Math.random() * 0.20 + 1));
-							// ToDo
-							// if ((playData != null) && (other ==
-							// player)) {
-							// playData.enemy = obj;
-							// }
+
+							if (other instanceof PlayerCharacter) {
+								((PlayerCharacter) other).setLastEnemy(obj);
+							}
 						}
 					}
 				}
@@ -334,18 +344,70 @@ public class ARPGUtils {
 		}
 	}
 
-	public static void updateContext(ARPGContext context) {
+	public static void updateContext(ARPGContext context,
+			ResourceBundle messages) {
 		try {
 			Vector2 mapPoint = getMapPoint(context.player);
 			MapChip mapChip = context.mapChipSprite.getMap()[(int) mapPoint.y][(int) mapPoint.x];
 			if (context.player.HP <= 0) {
+				int ranking = saveRanking(context);
 				context.initFloor(3, 3, true);
+				createRankingScreen(context, messages, ranking);
+				context.mode = ARPGContext.MODE_RANKING;
+				context.menuLayer.setVisible(true);
+				context.rankingLayer.setVisible(true);
+				((SurfaceLayer) context.statusSprite.getLayer()).surface()
+						.clear();
 			} else if (mapChip.getType() == MapChip.MAPCHIP_TYPE_DOWNSTAIR) {
 				context.initFloor(3, 3, false);
+				context.mode = ARPGContext.MODE_FLOOR_FADE;
+				context.floorLabelLayer = createMessageText(
+						MessageFormat.format(
+								messages.getString("textFloorLabel"),
+								context.floor), 64, Color.rgb(255, 255, 255));
+				context.floorLabelLayer
+						.setTx((graphics().width() - context.floorLabelLayer
+								.width()) / 2);
+				context.floorLabelLayer
+						.setTy((graphics().height() - context.floorLabelLayer
+								.height()) / 2);
+				context.uiLayer.add(context.floorLabelLayer);
 			}
 		} finally {
-			context.statusSprite.setText("B" + context.floor + "F  HP "
+			context.statusSprite.setText("B" + context.floor + " "
 					+ context.player.HP + "/" + context.player.MHP);
+		}
+	}
+
+	public static void createRankingScreen(ARPGContext context,
+			ResourceBundle messages, Integer highlight) {
+		Canvas canvas = ((CanvasImage) context.rankingImageLayer.image())
+				.canvas();
+		canvas.clear();
+		canvas.setFillColor(Color.rgb(0, 0, 0));
+		canvas.fillRect(0, 0, graphics().width(), graphics().height());
+		List<RankingItem> list = loadRanking();
+		if (list != null && list.size() > 0) {
+			int itemHeight = graphics().height()
+					/ (MasterData.RANKING_SIZE + 1);
+			int offY = itemHeight / 2;
+			int index = 1;
+			for (RankingItem item : list) {
+				ImageLayer layer = createMessageText(
+						item.getString(messages, index), itemHeight / 2,
+						Color.rgb(255, 255, 255));
+				offY += itemHeight;
+				int offX = (int) ((graphics().width() - layer.width()) / 2);
+				if ((highlight != null) && (highlight.intValue() == index)) {
+					canvas.setFillColor(Color.rgb(96, 96, 96));
+				} else {
+					canvas.setFillColor(Color.rgb(16, 16, 16));
+				}
+				canvas.fillRect(offX, offY + 2, layer.width(),
+						layer.height() - 4);
+				canvas.drawImage(layer.image(), offX, offY);
+				index++;
+			}
 		}
 	}
 
@@ -392,5 +454,62 @@ public class ARPGUtils {
 		}
 		Collections.reverse(list);
 		return result;
+	}
+
+	public static List<RankingItem> loadRanking() {
+		Storage storage = PlayN.storage();
+		String json = storage.getItem(MasterData.STRAGE_KEY_SAVE_DATA);
+		List<RankingItem> list = new ArrayList<RankingItem>();
+		if (json != null) {
+			Json.Array array = PlayN.json().parseArray(json);
+			int length = array.length();
+			for (int i = 0; i < length; i++) {
+				try {
+					RankingItem item = RankingItem.fromJson(array.getString(i));
+					list.add(item);
+				} finally {
+				}
+			}
+		}
+		return list;
+	}
+
+	public static int saveRanking(ARPGContext context) {
+		int rank = 0;
+		BaseCharacter lastEnemy = ((PlayerCharacter) context.player)
+				.getLastEnemy();
+		if (lastEnemy != null) {
+			Storage storage = PlayN.storage();
+			RankingItem item = new RankingItem();
+			item.floor = context.floor;
+			item.score = context.floor;
+			item.enemyName = ((EnemyCharacter) lastEnemy).name;
+			List<RankingItem> list = loadRanking();
+			boolean inserted = false;
+			int length = list.size();
+			for (int i = 0; i < length; i++) {
+				RankingItem historyItem = list.get(i);
+				if (historyItem.score <= item.score) {
+					rank = i + 1;
+					list.add(i, item);
+					inserted = true;
+					break;
+				}
+			}
+			if (!inserted) {
+				list.add(item);
+				rank = list.size();
+			}
+			length = Math.min(list.size(), MasterData.RANKING_SIZE);
+			Json.Writer writer = PlayN.json().newWriter();
+			writer.array();
+			for (int i = 0; i < length; i++) {
+				RankingItem historyItem = list.get(i);
+				writer.value(historyItem.toJson());
+			}
+			writer.end();
+			storage.setItem(MasterData.STRAGE_KEY_SAVE_DATA, writer.write());
+		}
+		return rank;
 	}
 }

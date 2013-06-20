@@ -29,6 +29,9 @@ public class MasterData {
 	public static final String EFFECT_SOUND_PARRIED = "parried";
 	public static final String EFFECT_SOUND_PICKUP = "pickup";
 
+	public static final String STRAGE_KEY_SAVE_DATA = "saveData";
+	public static final int RANKING_SIZE = 15;
+
 	public static final Image IMAGE_SHIELDS = assets().getImage(
 			"img/shields.png");
 	public static final Image IMAGE_SWORDS = assets()
@@ -179,6 +182,7 @@ public class MasterData {
 			add(new EnemyCharacter(enemy1Con, itemData.get("shortSword"),
 					itemData.get("woodenShield")) {
 				{
+					this.name = "Militia";
 					this.speed = 5;
 					this.dropRateMap = new HashMap<BaseItem, Integer>() {
 						private static final long serialVersionUID = -3178259687079263841L;

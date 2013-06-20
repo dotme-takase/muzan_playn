@@ -191,7 +191,6 @@ public abstract class BaseCharacter extends Vector2 implements Cloneable {
 				}
 				ARPGUtils.playSound("defeat");
 				if (characters.contains(this)) {
-					// characters.remove(this);
 					this.getSpriteContainer().getLayer().destroy();
 				}
 			} else if (this.action == CHARACTER_ACTION_DEFENCE_MOTION) {

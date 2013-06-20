@@ -18,6 +18,7 @@ public class EnemyCharacter extends BaseCharacter {
 	private List<Vector2> path = null;
 	private Vector2 nextPath;
 	private int defenceFrame = 0;
+	protected String name;
 
 	public EnemyCharacter(CharacterSpriteContainer spriteCon,
 			BaseItem rightArm, BaseItem leftArm) {
@@ -339,5 +340,9 @@ public class EnemyCharacter extends BaseCharacter {
 				}
 			}
 		}
+	}
+
+	public String getName() {
+		return name;
 	}
 }

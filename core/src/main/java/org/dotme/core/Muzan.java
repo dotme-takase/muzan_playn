@@ -3,6 +3,7 @@ package org.dotme.core;
 import static playn.core.PlayN.graphics;
 import static playn.core.PlayN.pointer;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +19,7 @@ import org.dotme.sprite.SpriteAnimation;
 import org.dotme.sprite.arpg.SpriteConstants;
 
 import playn.core.Canvas;
+import playn.core.CanvasImage;
 import playn.core.Color;
 import playn.core.Game;
 import playn.core.ImageLayer;
@@ -29,6 +31,8 @@ public class Muzan implements Game {
 	private ARPGContext arpgContext;
 
 	ResourceBundle messages = null;
+	Map<String, ImageLayer> mainMenuMap = null;
+	Map<String, ImageLayer> rankingMenuMap = null;
 
 	@Override
 	public void init() {
@@ -43,13 +47,14 @@ public class Muzan implements Game {
 	public void paint(float alpha) {
 		// the background automatically paints itself, so no need to do anything
 		// here!
+		Canvas uiImageCanvas = ((CanvasImage) arpgContext.uiImageLayer.image())
+				.canvas();
 		if (arpgContext.mode == ARPGContext.MODE_MAIN) {
 			ARPGUtils.refixCharacters();
 			arpgContext.viewPoint.x = arpgContext.player.x - graphics().width()
 					/ 2.0f;
 			arpgContext.viewPoint.y = arpgContext.player.y
 					- graphics().height() / 2.0f;
-
 			arpgContext.mapChipSprite.setOffset(arpgContext.viewPoint);
 			arpgContext.mapChipSprite.paint(alpha);
 
@@ -82,13 +87,13 @@ public class Muzan implements Game {
 		} else if (arpgContext.mode == ARPGContext.MODE_MENU) {
 			((SurfaceLayer) (arpgContext.mapChipSprite.getLayer())).surface()
 					.clear();
-			if (pointerListener.menuMap == null) {
-				pointerListener.menuMap = ARPGUtils.createMenuMap(messages);
-				for (Entry<String, ImageLayer> e : pointerListener.menuMap
-						.entrySet()) {
+			if (mainMenuMap == null) {
+				mainMenuMap = ARPGUtils.createMenuMap(messages);
+				for (Entry<String, ImageLayer> e : mainMenuMap.entrySet()) {
 					arpgContext.menuLayer.add(e.getValue());
 				}
 			}
+			pointerListener.menuMap = mainMenuMap;
 			Canvas menuCanvas = arpgContext.getMenuCanvas();
 			menuCanvas.clear();
 			menuCanvas.setFillColor(Color.rgb(255, 255, 255));
@@ -102,6 +107,32 @@ public class Muzan implements Game {
 				}
 				menuCanvas.fillRect(l.tx(), l.ty(), l.width(), l.height());
 			}
+		} else if (arpgContext.mode == ARPGContext.MODE_RANKING) {
+			if (rankingMenuMap == null) {
+				rankingMenuMap = new HashMap<String, ImageLayer>();
+				rankingMenuMap.put(ARPGContext.RANKING_MENU_BACK,
+						arpgContext.rankingImageLayer);
+			}
+			pointerListener.menuMap = rankingMenuMap;
+		} else if (arpgContext.mode == ARPGContext.MODE_FLOOR_FADE) {
+			uiImageCanvas.clear();
+			float alp = (arpgContext.floorFadeCount <= ARPGContext.FLOOR_FADE_COUNT) ? arpgContext.floorFadeCount
+					/ (float) ARPGContext.FLOOR_FADE_COUNT
+					: (ARPGContext.FLOOR_FADE_COUNT * 2 - arpgContext.floorFadeCount)
+							/ (float) ARPGContext.FLOOR_FADE_COUNT;
+			if (arpgContext.floorFadeCount == ARPGContext.FLOOR_FADE_COUNT) {
+				arpgContext.viewPoint.x = arpgContext.player.x
+						- graphics().width() / 2.0f;
+				arpgContext.viewPoint.y = arpgContext.player.y
+						- graphics().height() / 2.0f;
+				arpgContext.mapChipSprite.setOffset(arpgContext.viewPoint);
+				arpgContext.mapChipSprite.paint(alpha);
+			}
+			uiImageCanvas.setFillColor(Color.rgb(0, 0, 0));
+			uiImageCanvas.setAlpha(alp);
+			uiImageCanvas.fillRect(0, 0, uiImageCanvas.width(),
+					uiImageCanvas.height());
+			arpgContext.statusSprite.paint(alpha);
 		}
 	}
 
@@ -125,12 +156,32 @@ public class Muzan implements Game {
 				character.updateFrame(arpgContext);
 			}
 			ARPGUtils.checkDropItem(arpgContext, arpgContext.player);
-			ARPGUtils.updateContext(arpgContext);
+			ARPGUtils.updateContext(arpgContext, messages);
 		} else if (arpgContext.mode == ARPGContext.MODE_MENU) {
 			if (ARPGContext.MAIN_MENU_START_GAME
 					.equals(pointerListener.menuClicked)) {
 				arpgContext.menuLayer.setVisible(false);
 				arpgContext.mode = ARPGContext.MODE_MAIN;
+			} else if (ARPGContext.MAIN_MENU_RANKING
+					.equals(pointerListener.menuClicked)) {
+				ARPGUtils.createRankingScreen(arpgContext, messages, -1);
+				arpgContext.mode = ARPGContext.MODE_RANKING;
+				arpgContext.rankingLayer.setVisible(true);
+			}
+		} else if (arpgContext.mode == ARPGContext.MODE_RANKING) {
+			if (ARPGContext.RANKING_MENU_BACK
+					.equals(pointerListener.menuClicked)) {
+				arpgContext.rankingLayer.setVisible(false);
+				arpgContext.menuLayer.setVisible(true);
+				arpgContext.mode = ARPGContext.MODE_MENU;
+			}
+		} else if (arpgContext.mode == ARPGContext.MODE_FLOOR_FADE) {
+			if (arpgContext.floorFadeCount < ARPGContext.FLOOR_FADE_COUNT * 2) {
+				arpgContext.floorFadeCount++;
+			} else {
+				arpgContext.floorFadeCount = 0;
+				arpgContext.mode = ARPGContext.MODE_MAIN;
+				arpgContext.floorLabelLayer.destroy();
 			}
 		}
 	}

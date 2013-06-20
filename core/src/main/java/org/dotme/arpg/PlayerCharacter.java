@@ -3,6 +3,7 @@ package org.dotme.arpg;
 import org.dotme.sprite.arpg.CharacterSpriteContainer;
 
 public class PlayerCharacter extends BaseCharacter {
+	private BaseCharacter lastEnemy = null;
 	public PlayerCharacter(CharacterSpriteContainer spriteCon,
 			BaseItem rightArm, BaseItem leftArm) {
 		super(spriteCon, rightArm, leftArm);
@@ -64,5 +65,13 @@ public class PlayerCharacter extends BaseCharacter {
 			}
 		}
 		input.isMouseClick = false;
+	}
+
+	public BaseCharacter getLastEnemy() {
+		return lastEnemy;
+	}
+
+	public void setLastEnemy(BaseCharacter lastEnemy) {
+		this.lastEnemy = lastEnemy;
 	}
 }

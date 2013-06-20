@@ -23,9 +23,13 @@ import playn.core.ImageLayer;
 public class ARPGContext {
 	public static final String MAIN_MENU_START_GAME = "menuStartGame";
 	public static final String MAIN_MENU_RANKING = "menuRanking";
+	public static final String RANKING_MENU_BACK = "backToMainMenu";
 	public static final int MODE_MAIN = 0;
 	public static final int MODE_MENU = 1;
 	public static final int MODE_RANKING = 2;
+	public static final int MODE_FLOOR_FADE = 3;
+
+	public static final int FLOOR_FADE_COUNT = 16;
 
 	private static final ARPGContext instance = new ARPGContext();
 
@@ -42,16 +46,23 @@ public class ARPGContext {
 	public GroupLayer stageLayer;
 	public GroupLayer itemLayer;
 	public GroupLayer characterLayer;
+
 	public GroupLayer uiLayer;
+	public ImageLayer uiImageLayer;
+	public ImageLayer floorLabelLayer;
 
 	public GroupLayer menuLayer;
 	public ImageLayer menuImageLayer;
+
+	public GroupLayer rankingLayer;
+	public ImageLayer rankingImageLayer;
 
 	public TextSprite statusSprite;
 
 	public int mode = MODE_MENU;
 	public int floor = 0;
 	public int mapType = -1;
+	public int floorFadeCount = 0;
 
 	private ARPGContext() {
 	}
@@ -72,14 +83,28 @@ public class ARPGContext {
 		graphics().rootLayer().add(this.characterLayer);
 		this.uiLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
+		this.uiImageLayer = graphics()
+				.createImageLayer(
+						graphics().createImage(graphics().width(),
+								graphics().height()));
 		graphics().rootLayer().add(this.uiLayer);
 		this.menuLayer = graphics().createGroupLayer(graphics().width(),
 				graphics().height());
-		CanvasImage image = graphics().createImage(graphics().width(),
-				graphics().height());
-		this.menuImageLayer = graphics().createImageLayer(image);
+		this.menuImageLayer = graphics()
+				.createImageLayer(
+						graphics().createImage(graphics().width(),
+								graphics().height()));
 		this.menuLayer.add(menuImageLayer);
 		graphics().rootLayer().add(this.menuLayer);
+
+		this.rankingLayer = graphics().createGroupLayer(graphics().width(),
+				graphics().height());
+		this.rankingImageLayer = graphics()
+				.createImageLayer(
+						graphics().createImage(graphics().width(),
+								graphics().height()));
+		this.rankingLayer.add(rankingImageLayer);
+		graphics().rootLayer().add(this.rankingLayer);
 
 		viewPoint = new Vector2(0, 0);
 		mapChipSprite = new MapChipSprite(assets().getImage("img/tiles1.png"),
@@ -100,6 +125,7 @@ public class ARPGContext {
 				MasterData.fontHeight, MasterData.fontMap, 4, 4, graphics()
 						.width(), MasterData.fontHeight);
 		uiLayer.add(statusSprite.getLayer());
+		uiLayer.add(this.uiImageLayer);
 
 		initFloor(3, 3, false);
 	}
